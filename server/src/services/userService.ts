@@ -7,7 +7,7 @@ export async function CreateUser(email:string,password:string){
 
     const verifiyEmail=await prisma.user.findUnique({where:{email}})
 
-    if (verifiyEmail) return {error:"Email is already registered",data:{},message:"email is used"}
+    if (verifiyEmail) throw {error:"Email is already registered"}
 
     const passEncoded=await EncodedPassword(password)
 
@@ -25,7 +25,7 @@ export async function DeleteUser(id:number){
 
     const userDelete= await prisma.user.findUnique({where:{id}})
 
-    if (!userDelete) return {error:"User not exist",data:{},message:"User not found"}
+    if (!userDelete) throw {error:"User not found"}
 
     await prisma.user.delete({where:{id}})
 
@@ -33,25 +33,27 @@ export async function DeleteUser(id:number){
 }
 export async function AllUser(){
     
-    const alluser= await prisma.user.findMany({select:{email:true,username:true,name:true}})
+    const alluser= await prisma.user.findMany({select:{username:true,name:true,image:true,id:true}})
 
     return {error:"",data:alluser,message:"users founds"}
 }
 
 export async function OneUser(id:number){
 
-    const userfound= await prisma.user.findUnique({where:{id},include:{followers:true,following:true}})
+    const userfound= await prisma.user.findFirst({where:{id},include:{_count:{select:{followers:true,following:true}}}})
 
-    if (!userfound) return {error:"User not exist",data:{},messge:"User not found"}
+    if (!userfound) throw {error:"User not found"}
 
-    return {error:"",data:userfound,message:"user found"}
+     const {createdAt,updatedAt,password,...rest}=userfound
+
+    return {error:"",data:rest,message:"user found"}
 }
 
 export async function UpdateUser(name:string,username:string,password:string,id:number){
 
     const userfound= await prisma.user.findUnique({where:{id}})
 
-    if (!userfound) return {error:"User not exist",data:{},messge:"User not found"}
+    if (!userfound) throw {error:"User not found"}
 
     const userupdate=await prisma.user.update({
         where:{id},

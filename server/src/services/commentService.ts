@@ -13,6 +13,14 @@ export async function CreateComment(userId:number,postId:number,content:string){
     return {error:"",data:comment,message:"Commented"}
     
 }
+
+export async function AllComment(postId:number){
+    
+    const comments=await prisma.comment.findMany({where:{postId},include:{user:{select:{image:true,username:true,name:true}},_count:{select:{likes:true}}}})
+
+    return {error:"",data:comments,message:"all comments"}
+    
+}
 export async function DeleteComment(userId:number,postId:number){
     
     const comment=await prisma.comment.findMany({where:{AND:[{postId},{userId}]}})

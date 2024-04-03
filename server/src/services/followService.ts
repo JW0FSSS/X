@@ -10,10 +10,10 @@ export async function Follow(followerId:number,followingId:number){
     
     if (!followingExist) return {error:"follow couldnt make",data:{},message:"follow couldnt make"}
     
-    const followRelationexist = await prisma.follow.findMany({where:{followerId}})
+    const followRelationexist = await prisma.follow.findFirst({where:{followerId,followingId}})
 
     if (followRelationexist) return {error:"Already following this person",data:{},message:"Already following this person"}
-
+    
     const follow=await prisma.follow.create({data:{followerId,followingId}})
     
     return {error:"",data:follow,message:"follow"}
@@ -28,7 +28,7 @@ export async function UnFollow(followerId:number,followingId:number){
 
 export async function allFollow(followerId:number){
     
-    const allPost= await prisma.follow.findMany({where:{followerId}})
+    const allFollowings= await prisma.follow.findMany({where:{followerId}})
 
-    return {error:"",data:allPost.length,message:"Followers founds"}
+    return {error:"",data:allFollowings,message:"Followers founds"}
 }

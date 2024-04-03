@@ -29,7 +29,7 @@ export async function AllPost(){
 
 export async function OnePost(id:number){
 
-    const postFound= await prisma.post.findUnique({where:{id},select:{title:true,content:true,userId:true,comments:true,likes:true}})
+    const postFound= await prisma.post.findFirst({where:{id},include:{user:{select:{image:true,username:true,name:true}},_count:{select:{likes:true,comments:true}}}})
 
     if (!postFound) return {error:"Post not exist",data:{},message:"Post not found"}
 
@@ -38,7 +38,7 @@ export async function OnePost(id:number){
 
 export async function AllPostUser(id:number){
 
-    const postFound= await prisma.post.findMany({where:{userId:id},select:{title:true,content:true,userId:true,comments:true,likes:true}})
+    const postFound= await prisma.post.findMany({where:{userId:id},include:{_count:{select:{comments:true,likes:true}},user:{select:{image:true,username:true,name:true}}}})
 
     if (!postFound) return {error:"Post not exist",data:{},message:"Post not found"}
 
