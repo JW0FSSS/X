@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 import { Home } from './pages/Home'
 import { NotFound } from './pages/NotFound'
 import Login from './pages/Login'
-import { PostPage } from './pages/Page'
+import { PostPage } from './pages/PostPage'
 import { Profile } from './pages/Profile'
 import { ProtecRoute } from './components/ProtecRoute/protecRoute'
 

@@ -8,6 +8,10 @@ export async function ToLikePost(userId:number,postId:number){
 
     if (!postexist) return {error:"Post not found",data:{},message:"Post not found"}
     
+    const islikeexist= await prisma.like_Post.findFirst({where:{AND:{userId,postId}}})
+
+    if (islikeexist?.id) return {error:"is already liked",data:{},message:"si already liked"} 
+
     const postliked=await prisma.like_Post.create({data:{postId,userId}})
     
     return {error:"liked",data:postliked,message:"liked"}

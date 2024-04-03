@@ -10,6 +10,7 @@ import { Post } from "../components/Home/Post"
 import { fetchUsers } from "../services/users"
 import { fetchAllFollow, fetchFollow, fetchUnFollow } from "../services/follow"
 import { useNavigate } from "react-router-dom";
+import { RootState } from "../store/store"
 
 export function Home() {
   const navigate = useNavigate();
@@ -17,14 +18,15 @@ export function Home() {
   const[feed,setFeed]=useState([])
   const[users,setUsers]=useState([])
   const[follows,setFollows]=useState([])
-  const user=useSelector((state)=>state.user)
+  const user=useSelector((state:RootState)=>state.user)
   const dispatch=useDispatch()
 
   useEffect(()=>{
         fetchFeed({token:user.token})
         .then(res=>{
-          console.log(res.data)
-          
+          if (res.error=="no data") {
+            localStorage.removeItem("__user__")
+        }
           setLoading(false)
           setFeed(res.data.feed)          
         })
@@ -45,14 +47,14 @@ useEffect(()=>{
   const handleFollow=(followingId:string)=>{
     fetchFollow({token:user.token,followingId})
     .then(res=>{
-      console.log(res)
+      window.location.href="/home"
     })
   }
 
   const handleUnFollow=(followingId:string)=>{
     fetchUnFollow({token:user.token,followingId})
     .then(res=>{
-      console.log(res)
+      window.location.href="/home"
     })
   }
   const handleSubmit=()=>{
@@ -74,6 +76,8 @@ useEffect(()=>{
 
         <Post/>
         {feed.length<1?<h1 className="text-center py-10">There arent post</h1>:feed.filter(e=>e!==null).map((post)=>{
+          console.log(post)
+          
           return(
             <article key={post.id} className="bg-black/70 pl-14 pr-5 py-5 w-full flex flex-col gap-y-5 border-white/30 border-t-[1px] relative hover:opacity-50 hover:cursor-pointer" onClick={()=>handleNavigate(post.id)}>
               <img src={post.user.image} alt="" className="size-7 rounded-full absolute top-5 left-5"/>
@@ -84,7 +88,7 @@ useEffect(()=>{
               <h2>{post.content}</h2>
               <div className="flex gap-20">
                 <div className="hover:text-blue-500  transition-all duration-300 flex gap-2 items-center hover:cursor-pointer"><Comment/><span>{post._count.comments}</span></div>
-                <div className="hover:text-red-500  transition-all duration-300 flex gap-2 items-center hover:cursor-pointer"><Fav/><span>{post._count.likes}</span></div>
+                <div className={`${post.liked?"hover:text-white text-red-500":"hover:text-red-500 text-white"}  transition-all duration-300 flex gap-2 items-center hover:cursor-pointer`}><Fav/><span>{post._count.likes}</span></div>
               </div>
             </article>
           )

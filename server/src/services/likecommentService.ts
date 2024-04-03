@@ -8,6 +8,10 @@ export async function ToLikeComment(userId:number,commentId:number){
 
     if (!commentexist) return {error:"Comment not found",data:{},message:"Comment not found"}
     
+    const islikeexist= await prisma.like_Comment.findFirst({where:{AND:{userId,commentId}}})
+
+    if (islikeexist?.id) return {error:"is already commented",data:{},message:"si already commented"} 
+    
     const postliked=await prisma.like_Comment.create({data:{commentId,userId}})
     
     return {error:"liked",data:postliked,message:"liked"}

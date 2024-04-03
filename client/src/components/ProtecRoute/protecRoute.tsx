@@ -2,9 +2,10 @@ import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { Navigate, Outlet } from "react-router-dom"
 import { fetchProfile } from "../../services/Profile"
+import { RootState } from "../../store/store"
 
 export function ProtecRoute({children}) {
-    const user =useSelector(state=>state.user)
+    const user =useSelector((state:RootState)=>state.user)
     useEffect(()=>{
         fetchProfile({token:user.token})
         .then(res=>{

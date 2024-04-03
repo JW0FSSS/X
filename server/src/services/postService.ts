@@ -27,11 +27,19 @@ export async function AllPost(){
     return {error:"",data:allPost,message:"Posts founds"}
 }
 
-export async function OnePost(id:number){
+export async function OnePost(postId:number,id:number){
 
-    const postFound= await prisma.post.findFirst({where:{id},include:{user:{select:{image:true,username:true,name:true}},_count:{select:{likes:true,comments:true}}}})
+    const postFound= await prisma.post.findFirst({where:{id:postId},include:{user:{select:{image:true,username:true,name:true}},_count:{select:{likes:true,comments:true}}}})
 
     if (!postFound) return {error:"Post not exist",data:{},message:"Post not found"}
+
+    const userLike=await prisma.like_Post.findFirst({where:{ AND:{postId,userId:id}}})
+    
+    if (userLike?.id) {
+        postFound.liked=true
+    }else{
+        postFound.liked=false
+    }
 
     return {error:"",data:postFound,message:"post found"}
 }

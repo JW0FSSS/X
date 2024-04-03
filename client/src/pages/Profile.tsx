@@ -6,11 +6,12 @@ import { fetchProfile } from "../services/Profile"
 import { fetchAllPostUser } from "../services/post"
 import { Comment } from "../icons/coment"
 import { Fav } from "../icons/fav"
+import { RootState } from "../store/store"
 
 export function Profile() {
 
     const param= useParams()
-    const user=useSelector(state=>state.user)
+    const user=useSelector((state:RootState)=>state.user)
     const [follows,setFollows]=useState({followers:0,followings:0})
     const [posts,setPost]=useState([])
 
@@ -19,7 +20,10 @@ export function Profile() {
         .then(res=>setFollows({followers:res.data._count.followers,followings:res.data._count.following}))
         
         fetchAllPostUser({token:user.token,id:param.id||"1"})
-        .then(res=>setPost(res.data))
+        .then(res=>{
+            if (res.error!=null||res.error!=undefined) {
+                localStorage.removeItem("__user__")
+            }setPost(res.data)})
 
     },[])
 

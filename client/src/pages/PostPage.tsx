@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { Fav } from "../icons/fav";
 import { Comment } from "../icons/coment";
 import { fetchComment, fetchComments } from "../services/comments";
+import { fetchDisLikePost, fetchLikePost } from "../services/likePost";
 
 export function PostPage() {
 
@@ -14,11 +15,21 @@ export function PostPage() {
     const [posts,setPost]=useState([])
     const [comments,setComments]=useState([])
     const [comment,setComment]=useState({content:""})
-
+    const [trigger,setTrigger]=useState("")
     
     const handleChange=(e: React.ChangeEvent<HTMLInputElement>)=>{
         const content=e.target.value
         setComment(prev=>({...prev,content}))
+    }
+
+    const handleUnFav=()=>{
+        const {id}=param
+
+        fetchDisLikePost({token:user.token,postId:+id})
+        .then(res=>{
+            console.log(res)
+            
+            setTrigger(res.message)})
     }
     
     const handleSubmit=(e: React.FormEvent<HTMLFormElement> )=>{
@@ -27,23 +38,39 @@ export function PostPage() {
         const {id}=param
         if (id==undefined) return
         fetchComment({token:user.token,content,postId:+id})
-        .then(res=>console.log(res))
-    }
-    useEffect(()=>{
+        e.target.reset()
+        setTrigger(comment.content)
+    }   
+    const handleFav=()=>{
+
         const {id}=param
 
-        fetchOnePost({token:user.token,id:id||"|"})
-        .then(res=>setPost([res.data]))
-
-        fetchComments({token:user.token,postId:id||"1"})
-        .then(res=>setComments(res.data))
-    },[])
-
+        fetchLikePost({token:user.token,postId:+id})
+        .then(res=>{
+            console.log(res)
+            
+            setTrigger(res.message)})
+    }
+    
+    useEffect(()=>{
+        const {id}=param
+            fetchOnePost({token:user.token,id:id||"|"})
+            .then(res=>{
+                if (res.error!="") {
+                    localStorage.removeItem("__user__")
+                }
+                
+                setPost([res.data])})
+            fetchComments({token:user.token,postId:id||"1"})
+            .then(res=>setComments(res.data))
+        },[trigger])
+        
     return(
         <section className="bg-black text-white h-full w-full">
             <SideBar/>
             <section className="ml-[634px] pt-5 w-[630px] border-white/30 border-[1px] border-t-transparent inline-block">
             {posts.map((post)=>{
+                
                 let date=new Date(post.createdAt)
                 return(
                     <article key={param.id} className="bg-black/70 pl-16 pr-5 py-5 w-full flex flex-col gap-y-5 border-white/30 border-t-[1px] relative border-b-[1px]">
@@ -55,7 +82,7 @@ export function PostPage() {
                     <h2 className="text-3xl my-10">{post.content}</h2>
                     <div className="flex gap-20">
                         <div className="hover:text-blue-500  transition-all duration-300 flex gap-2 items-center hover:cursor-pointer"><Comment/><span>{`${post._count.comments}`}</span></div>
-                        <div className="hover:text-red-500  transition-all duration-300 flex gap-2 items-center hover:cursor-pointer"><Fav/><span>{`${post._count.likes}`}</span></div>
+                        <div className={`${post.liked?"text-red-500 hover:text-white":"hover:text-red-500"}  transition-all duration-300 flex gap-2 items-center hover:cursor-pointer`} onClick={post.liked?handleUnFav:handleFav}><Fav/><span>{`${post._count.likes}`}</span></div>
                     </div>
                     <span className="text-white/40">{date.toLocaleString("es-es", { timeZone: 'UTC' })}</span>
                     </article>
@@ -84,7 +111,9 @@ export function PostPage() {
                          <span className="text-white/40">{date.toLocaleString("es-es", { timeZone: 'UTC' })}</span>
                     </div>
                     <h2 className="text-md">{comment.content}</h2>
-                    <div className="hover:text-red-500  transition-all duration-300 flex gap-2 items-center hover:cursor-pointer absolute top-3 right-3"><Fav/><span>{`${comment._count.likes}`}</span></div>
+                    <div className="hover:text-red-500  transition-all duration-300 flex gap-2 items-center hover:cursor-pointer absolute top-3 right-3" >
+                        <Fav/><span>{`${comment._count.likes}`}</span>
+                    </div>
                     </article>
                 )
                 })}

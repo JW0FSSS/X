@@ -1,6 +1,4 @@
 import { Request, Response } from "express"
-import { CreateComment, DeleteComment, UpdateComment } from "services/commentService.js"
-import { Follow, UnFollow, allFollow } from "services/followService.js"
 import { AllLikePost, DisLikePost, ToLikePost } from "services/likepostService.js"
 
 

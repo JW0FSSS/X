@@ -29,9 +29,10 @@ export async function AllPostController(req:Request,res:Response){
 
 export async function OnePostController(req:Request,res:Response){
     
-    const {id}=req.params
+    const {postId}=req.params
+    const {id}=req
 
-    const data=await OnePost(+id)
+    const data=await OnePost(+postId,+id)
 
     res.json(data)
 }
