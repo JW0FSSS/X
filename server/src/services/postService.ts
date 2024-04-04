@@ -53,6 +53,15 @@ export async function AllPostUser(id:number){
     return {error:"",data:postFound,message:"post found"}
 }
 
+export async function AllPostbyUser(username:string){
+
+    const postFound= await prisma.post.findMany({where:{user:{username}},include:{_count:{select:{comments:true,likes:true}},user:{select:{image:true,username:true,name:true}}}})
+
+    if (!postFound) return {error:"Post not exist",data:{},message:"Post not found"}
+
+    return {error:"",data:postFound,message:"post found"}
+}
+
 export async function UpdatePost(title:string,content:string,published:boolean,userId:number,id:number){
 
     const postFound= await prisma.post.findUnique({where:{id}})

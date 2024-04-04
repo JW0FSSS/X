@@ -1,4 +1,4 @@
-import { AllPostController, AllPostUserController, CreatePostController, DeletePostController, OnePostController, UpdatePostController } from "../controllers/postController.js";
+import { AllPostByUserController, AllPostController, AllPostUserController, CreatePostController, DeletePostController, OnePostController, UpdatePostController } from "../controllers/postController.js";
 import { Router } from "express";
 import { VerifyAuth } from "../middlewares/AuthMiddleware.js";
 
@@ -10,3 +10,4 @@ postRoute.get("/posts/:postId",VerifyAuth,OnePostController)
 postRoute.put("/posts/",VerifyAuth,UpdatePostController)
 postRoute.delete("/posts/",VerifyAuth,DeletePostController)
 postRoute.get("/posts/user/:userId",VerifyAuth,AllPostUserController)
+postRoute.get("/posts/user/by/:user",VerifyAuth,AllPostByUserController)

@@ -9,7 +9,7 @@ export function Post() {
 
     const user=useSelector((state:RootState)=>state.user)
 
-    const handleChange=(e:React.ChangeEvent<HTMLTextAreaElement>)=>{
+    const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
         const content=e.target.value
         setPost(prev=>({...prev,content}))
     }
@@ -22,13 +22,14 @@ export function Post() {
     }
 
     return(
-        <form className="w-full -pr-5 relative border-b-[1px] border-white/30" onSubmit={handleSubmit}>
-          <img src={`${user.image?user.image:"https://www.testhouse.net/wp-content/uploads/2021/11/default-avatar.jpg"}`} alt="" className="rounded-full size-12 absolute top-5 left-5"/>
-          <textarea name="" defaultValue={post.content} onChange={handleChange} placeholder="¿What is happening?!!"  rows={3} className=" resize-none bg-transparent w-5/6 border-b-[1px] border-white/30 focus:outline-none ml-20 my-10 pb-10 ">
-          </textarea>
+        <form className="w-full -pr-5 border-b-[1px] p-5 border-white/30" onSubmit={handleSubmit}>
+            <div className="flex gap-4 mb-5 flex-wrap text-xl">
+                <img src={`${user.image?user.image:"https://www.testhouse.net/wp-content/uploads/2021/11/default-avatar.jpg"}`} alt="" className="rounded-full size-10"/>
+                <input  onChange={handleChange} placeholder="¿What is happening?!!"  className=" resize-none bg-transparent w-5/6 border-b-[1px] border-white/30 focus:outline-none pb-10"></input>
+            </div>
           <div className="flex justify-between  items-center mx-5 mb-2">
-          <h1>actions</h1>
-          <button type="submit" className="bg-secondary rounded-3xl px-4 py-2">POST</button>
+            <h1>Future actions...</h1>
+            <button type="submit" className="bg-secondary rounded-3xl px-4 py-2">POST</button>
           </div>
         </form>
     )

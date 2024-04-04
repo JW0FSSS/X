@@ -1,20 +1,11 @@
-import { useEffect, useState } from "react"
-import { fetchAllFollow, fetchFollow, fetchUnFollow } from "../../services/follow"
-import { IFollow } from "../../types/follows"
+import {  useState } from "react"
+import { fetchFollow, fetchUnFollow } from "../../services/follow"
 import { IUser } from "../../types/user"
 
 export function FollowCard({user,token}:{user:IUser,token:string}) {
 
-    const[follows,setFollows]=useState<IFollow[]>([])
-    let [isfollow,setFollow]=useState(undefined)
 
-    useEffect(()=>{
-        fetchAllFollow({token})
-        .then(res=>{ 
-            setFollows(res.data)})
-    },[isfollow])
-
-    isfollow=follows.some((follow)=>follow.followingId==user.id)
+    const [isfollow,setFollow]=useState<boolean>(false)
 
         const handleFollow=(followingId:number)=>{
             fetchFollow({token,followingId})
@@ -33,6 +24,7 @@ export function FollowCard({user,token}:{user:IUser,token:string}) {
                 setFollow(true)
             })
         }
+
 
     return(
         <article key={user.id} className="flex gap-5 items-center">

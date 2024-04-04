@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { Follow, UnFollow, allFollow } from "services/followService.js"
+import { Follow, UnFollow, allFollow, allFollowers, allFollowings } from "services/followService.js"
 
 
 export async function FollowController(req:Request,res:Response){
@@ -22,12 +22,21 @@ export async function UnFollowController(req:Request,res:Response){
 
     res.json(data)
 }
-export async function allFollowController(req:Request,res:Response){
+export async function allFollowingsController(req:Request,res:Response){
     
     const {id}=req
     const followerId=+id
 
-    const data=await allFollow(followerId)
+    const data=await allFollowings(followerId)
+
+    res.json(data)
+}
+export async function allFollowersController(req:Request,res:Response){
+    
+    const {id}=req
+    const followerId=+id
+
+    const data=await allFollowers(followerId)
 
     res.json(data)
 }

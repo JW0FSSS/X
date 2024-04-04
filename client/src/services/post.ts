@@ -29,8 +29,8 @@ export async function fetchOnePost({token,id}:{token:string,id:string}) {
      return data 
 }
 
-export async function fetchAllPostUser({token,id}:{token:string,id:string}) {
-    const res =await fetch(`${URL}/posts/user/${id}`,{
+export async function fetchAllPostUser({token,user}:{token:string,user:string}) {
+    const res =await fetch(`${URL}/posts/user/by/${user}`,{
         method:"get", 
          headers:{
              "Content-type":"application/json",

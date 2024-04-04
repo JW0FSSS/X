@@ -6,6 +6,8 @@ import Login from './pages/Login'
 import { PostPage } from './pages/PostPage'
 import { Profile } from './pages/Profile'
 import { ProtecRoute } from './components/ProtecRoute/protecRoute'
+import { Followings } from './pages/Followings'
+import { Followers } from './pages/Followers'
 
 function App() {
   
@@ -29,6 +31,15 @@ function App() {
           <Profile/>
         </ProtecRoute>
         }/>
+        <Route path='/user/:username/followings'element={
+        <ProtecRoute >
+          <Followings/>
+        </ProtecRoute>
+        }/>
+        <Route path='/user/:username/followers'element={
+        <ProtecRoute >
+          <Followers/>
+        </ProtecRoute>}/>
       <Route path='*'element={<NotFound/>}/>
       </Routes>
 

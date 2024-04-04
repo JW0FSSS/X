@@ -9,7 +9,7 @@ export async function fetchFeed({token}:{token:string}){
         }
 
     })
-    if (res.status!=200) return {error:"failed"}
+    if (res.status!=200) throw new Error("No autorization")
     const data =await res.json()
     return data
 }

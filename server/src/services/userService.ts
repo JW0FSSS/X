@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { EncodedPassword } from "../utilities/encryptPassword.js";
+import { allFollowings } from "./followService.js";
 
 const prisma=new PrismaClient()
 
@@ -31,9 +32,15 @@ export async function DeleteUser(id:number){
 
     return {error:"",data:{},message:"user deleted"}
 }
-export async function AllUser(){
+export async function AllUser(userid:number){
+
+    const userSugerency= await prisma.user.findMany({where:{NOT:{id:userid}},select:{username:true,name:true,image:true,id:true},take:50})
+
+    const alreadyFollowings=await allFollowings(userid)
     
-    const alluser= await prisma.user.findMany({select:{username:true,name:true,image:true,id:true}})
+    const filterUsers=userSugerency.filter(user=>alreadyFollowings.data.some(e=>e.followingId==user.id)?false:true)
+
+    const alluser=filterUsers.slice(0,10)
 
     return {error:"",data:alluser,message:"users founds"}
 }

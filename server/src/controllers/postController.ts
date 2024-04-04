@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { AllPost, AllPostUser, CreatePost, DeletePost, OnePost, UpdatePost } from "../services/postService.js"
+import { AllPost, AllPostUser, AllPostbyUser, CreatePost, DeletePost, OnePost, UpdatePost } from "../services/postService.js"
 
 export async function CreatePostController(req:Request,res:Response){
 
@@ -42,6 +42,15 @@ export async function AllPostUserController(req:Request,res:Response){
     const {userId}=req.params
 
     const data=await AllPostUser(+userId)
+
+    res.json(data)
+}
+
+export async function AllPostByUserController(req:Request,res:Response){
+    
+    const {user}=req.params
+
+    const data=await AllPostbyUser(user)
 
     res.json(data)
 }

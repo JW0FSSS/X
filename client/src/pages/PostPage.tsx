@@ -8,7 +8,7 @@ import { Layaout } from "../layaout/layaout";
 import { IComments } from "../types/comments";
 import { RootState } from "../store/store";
 import { IFeed } from "../types/fedd";
-import { OnePost } from "../components/Postpage/onePost";
+import { Posts } from "../components/Home/posts";
 
 export function PostPage() {
 
@@ -17,7 +17,6 @@ export function PostPage() {
     const [posts,setPost]=useState<IFeed[]>([])
     const [comments,setComments]=useState<IComments[]>([])
     const [comment,setComment]=useState({content:""})
-    const [trigger,setTrigger]=useState("")
     
     const handleChange=(e: React.ChangeEvent<HTMLInputElement>)=>{
         const content=e.target.value
@@ -32,7 +31,6 @@ export function PostPage() {
         if (id==undefined) return
         fetchComment({token:user.token,content,postId:id})
         e.target.reset()
-        setTrigger(comment.content)
     }   
     
     
@@ -47,12 +45,12 @@ export function PostPage() {
                 setPost([res.data])})
             fetchComments({token:user.token,postId:id||"1"})
             .then(res=>setComments(res.data))
-        },[trigger])
+        },[])
         
     return(
         <Layaout>
             <section className="ml-[634px] pt-5 w-[630px] border-white/30 border-[1px] border-t-transparent inline-block">
-            {posts.map((post)=><OnePost id={+param.id!} post={post} token={user.token} setTrigger={setTrigger} />)}
+            {posts.map((post)=><Posts post={post} token={user.token} />)}
 
                 <div>
                 <form className="w-full -pr-5 relative border-b-[1px] border-white/30" onSubmit={handleSubmit}>

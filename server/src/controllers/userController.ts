@@ -34,7 +34,9 @@ export async function DeleteUserController(req:Request,res:Response){
 }
 export async function AllUserController(req:Request,res:Response){
     
-    const data=await AllUser()
+    const {id}=req
+    const userid=+id
+    const data=await AllUser(userid)
 
     res.json(data)
 }

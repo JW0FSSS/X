@@ -22,7 +22,7 @@ export async function fetchLikePostSame({token}:{token:string}) {
             "Authorization":`Bearer ${token}`
         },
     })
-
+    if (res.status!=200) throw new Error("bad")
     const data= await res.json()
     return data
 }
@@ -36,7 +36,7 @@ export async function fetchDisLikePost({postId,token}:{postId:number,token:strin
         },
         body:JSON.stringify({postId})
     })
-
+    if (res.status!=200) throw new Error("bad")
     const data= await res.json()
     return data
 }

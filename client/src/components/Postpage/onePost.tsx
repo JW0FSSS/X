@@ -9,8 +9,7 @@ export function OnePost({post,token,id,setTrigger}:{post:IFeed,token:string,id:n
     const handleUnFav=()=>{
 
         fetchDisLikePost({token,postId:id})
-        .then(res=>{
-            console.log(res)    
+        .then(res=>{ 
             setTrigger(res.message)})
     }
 
@@ -18,8 +17,6 @@ export function OnePost({post,token,id,setTrigger}:{post:IFeed,token:string,id:n
 
         fetchLikePost({token,postId:id})
         .then(res=>{
-            console.log(res)
-            
             setTrigger(res.message)})
     }
 
