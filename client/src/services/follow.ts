@@ -1,6 +1,6 @@
 import { URL } from "../Const/url";
 
-export async function fetchFollow({token,followingId}:{token:string,followingId:string}) {
+export async function fetchFollow({token,followingId}:{token:string,followingId:number}) {
     
     const res=await fetch(`${URL}/follows`,{
         method:"post",
@@ -14,7 +14,7 @@ export async function fetchFollow({token,followingId}:{token:string,followingId:
     const data= await res.json()
     return data
 }
-export async function fetchUnFollow({token,followingId}:{token:string,followingId:string}) {
+export async function fetchUnFollow({token,followingId}:{token:string,followingId:number}) {
     
     const res=await fetch(`${URL}/follows/unfollow`,{
         method:"delete",

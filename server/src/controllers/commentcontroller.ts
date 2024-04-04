@@ -7,8 +7,10 @@ export async function CreateCommentController(req:Request,res:Response){
     const {postId,content}=req.body
     const {id}=req
     const userId=+id
-    
-    const data=await CreateComment(userId,postId,content)
+    const postId_=+postId
+
+
+    const data=await CreateComment(userId,postId_,content)
 
     res.json(data)
 

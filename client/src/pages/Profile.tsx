@@ -1,35 +1,46 @@
-import { useParams } from "react-router-dom"
-import { SideBar } from "../components/Home/SideBar"
+import { Navigate, useParams } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { useEffect, useState } from "react"
 import { fetchProfile } from "../services/Profile"
 import { fetchAllPostUser } from "../services/post"
-import { Comment } from "../icons/coment"
-import { Fav } from "../icons/fav"
 import { RootState } from "../store/store"
+import { Layaout } from "../layaout/layaout"
+import { Posts } from "../components/Home/posts"
+import { IFeed } from "../types/fedd"
+import { fetchLikePostSame } from "../services/likePost"
 
 export function Profile() {
 
     const param= useParams()
     const user=useSelector((state:RootState)=>state.user)
     const [follows,setFollows]=useState({followers:0,followings:0})
-    const [posts,setPost]=useState([])
+    const [posts,setPost]=useState<IFeed[]>([])
+    const [likes,setLikes]=useState([])
 
     useEffect(()=>{
         fetchProfile({token:user.token})
         .then(res=>setFollows({followers:res.data._count.followers,followings:res.data._count.following}))
-        
+        .catch(e=>{
+            localStorage.removeItem("__user__")
+        return <Navigate to={"/"} replace={true}/>
+    })
+
         fetchAllPostUser({token:user.token,id:param.id||"1"})
         .then(res=>{
-            if (res.error!=null||res.error!=undefined) {
-                localStorage.removeItem("__user__")
-            }setPost(res.data)})
+            setPost(res.data)})
+
+        fetchLikePostSame({token:user.token})
+        .then(res=>{
+           setLikes(res.data)
+            })
 
     },[])
 
+    if (!user.token)return <Navigate to={"/"} replace={true}/>
+
     return (
-        <section className="bg-black text-white h-full w-full">
-             <SideBar/>
+        <Layaout>
+
             <section className="ml-[634px] pt-5 w-[630px] border-white/30 border-[1px] border-t-transparent inline-block">
                 <div className="ml-5 mb-1">
                     {/* <span onClick={handleReturn}>1--</span> */}
@@ -44,31 +55,20 @@ export function Profile() {
                         <h1 className=" text-white/50">@{user.username}</h1>
                     </div>
                     <div className="flex gap-10 text-sm">
-                        <span>{follows.followings} Follwing</span>
-                        <span>{follows.followers} Followers</span>
+                        <span  className="hover:border-b-[1px] hover:border-white/40 cursor-pointer ">{follows.followings} Follwing</span>
+                        <span className="hover:border-b-[1px] hover:border-white/40 cursor-pointer" >{follows.followers} Followers</span>
                     </div>
                     <h4 className="mt-5 pb-3 border-b-[2px] border-secondary inline-block cursor-pointer">Post</h4>
                 </div>
                 {posts.map((post)=>{
-                let date=new Date(post.createdAt)
+                    
+                    post.liked=likes.some(like=>like[0]?.postId==post.id)
                 return(
-                    <article key={param.id} className="bg-black/70 pl-16 pr-5 py-5 w-full flex flex-col gap-y-1 border-white/30 border-t-[1px] relative border-b-[1px]">
-                    <img src={post.user.image} alt="" className="size-10 rounded-full absolute top-4 left-3"/>
-                    <div className="flex gap-5">
-                        <h3 className="inline-block">{post.user.name}</h3>
-                        <span className="text-white/60">{post.user.username?`@${post.user.username}`:"@anonimo"}</span>
-                    </div>
-                    <h2 className="text-xl">{post.content}</h2>
-                    <div className="flex gap-20">
-                        <div className="hover:text-blue-500  transition-all duration-300 flex gap-2 items-center hover:cursor-pointer"><Comment/><span>{`${post._count.comments}`}</span></div>
-                        <div className="hover:text-red-500  transition-all duration-300 flex gap-2 items-center hover:cursor-pointer"><Fav/><span>{`${post._count.likes}`}</span></div>
-                    </div>
-                    <span className="text-white/40 absolute top-3 right-3">{date.toLocaleString("es-es", { timeZone: 'UTC' })}</span>
-                    </article>
-                )
+                    <Posts post={post} token={user.token}/>
+                    )
                 })}
             </section>
             
-        </section>
+            </Layaout>
     )
 }

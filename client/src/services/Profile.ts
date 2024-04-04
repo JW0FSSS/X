@@ -8,7 +8,7 @@ export async function fetchProfile({token}:{token:string}) {
             "Authorization":`Bearer ${token}`
         }
     })
-    if (res.status!=200) return {error:"no data"}
+    if (res.status!=200) throw new Error("No autorization")
 
     const data = await res.json()
     return data

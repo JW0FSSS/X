@@ -6,11 +6,12 @@ import { useState } from "react";
 import { ProfileIcon } from "../../icons/profile";
 import { LogoutIcon } from "../../icons/logout";
 import { clearUser } from "../../store/userSlice";
+import { RootState } from "../../store/store";
 
 export function SideBar() {
 
     const [isLogoutOpen,setLogout]=useState(false)
-    const user=useSelector(state=>state.user)
+    const user=useSelector((state:RootState)=>state.user)
     const dispatch=useDispatch()
 
     const handleModal=()=>{

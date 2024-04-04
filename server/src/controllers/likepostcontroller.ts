@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { AllLikePost, DisLikePost, ToLikePost } from "services/likepostService.js"
+import { AllLikePost, AllLikePostSame, DisLikePost, ToLikePost } from "services/likepostService.js"
 
 
 export async function LikePostController(req:Request,res:Response){
@@ -23,11 +23,19 @@ export async function DisLikePostController(req:Request,res:Response){
     res.json(data)
 }
 export async function AllLikePostController(req:Request,res:Response){
-    const {commentId,content}=req.body
     const {id}=req
     const userId=+id
 
     const data=await AllLikePost(userId)
+
+    res.json(data)
+}
+
+export async function AllLikePostSameController(req:Request,res:Response){
+    const {id}=req
+    const userId=+id
+
+    const data=await AllLikePostSame(userId)
 
     res.json(data)
 }

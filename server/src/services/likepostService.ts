@@ -34,3 +34,14 @@ export async function AllLikePost(userId:number){
 
     return {error:"",data:allPost.length,message:"Likes founds"}
 }
+
+export async function AllLikePostSame(userId:number){
+    
+    const Posts= await prisma.post.findMany({where:{userId}})
+
+    const alllikes=Posts.map(async(post)=>await prisma.like_Post.findMany({where:{postId:post.id}}))
+
+    const allLikessame= await Promise.all(alllikes)
+    
+    return {error:"",data:allLikessame,message:"Likes founds"}
+}

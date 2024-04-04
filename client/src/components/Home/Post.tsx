@@ -1,12 +1,13 @@
 import { useSelector } from "react-redux"
 import { fetchPost } from "../../services/post"
 import { useState } from "react"
+import { RootState } from "../../store/store"
 
 export function Post() {
     
     const [post,setPost]=useState({title:"",content:""})
 
-    const user=useSelector(state=>state.user)
+    const user=useSelector((state:RootState)=>state.user)
 
     const handleChange=(e:React.ChangeEvent<HTMLTextAreaElement>)=>{
         const content=e.target.value
