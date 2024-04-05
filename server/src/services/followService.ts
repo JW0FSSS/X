@@ -4,33 +4,33 @@ const prisma=new PrismaClient()
 
 export async function Follow(followerId:number,followingId:number){
     
-    if (followerId==followingId ) return {error:"You don't follow yourself",data:{},message:"You don't follow yourself"}
+    if (followerId==followingId ) throw new Error("You don't follow yourself") 
     
     const followingExist=await prisma.user.findUnique({where:{id:followingId}})
     
-    if (!followingExist) return {error:"follow couldnt make",data:{},message:"follow couldnt make"}
+    if (!followingExist) throw new Error("follow couldnt make") 
     
     const followRelationexist = await prisma.follow.findFirst({where:{followerId,followingId}})
 
-    if (followRelationexist) return {error:"Already following this person",data:{},message:"Already following this person"}
+    if (followRelationexist) throw new Error("Already following this person")
     
     const follow=await prisma.follow.create({data:{followerId,followingId}})
     
-    return {error:"",data:follow,message:"follow"}
+    return {data:follow,message:"follow"}
     
 }
 export async function UnFollow(followerId:number,followingId:number){
     
     const UnFollow=await prisma.follow.deleteMany({where:{AND:[{followerId},{followingId}]}})
     
-    return {error:"",data:{UnFollow},message:"UnFollow"}
+    return {data:{UnFollow},message:"UnFollow"}
 }
 
 export async function allFollowings(followerId:number){
     
     const allFollowings= await prisma.follow.findMany({where:{followerId},include:{following:{select:{id:true,image:true,name:true,username:true}}}})
 
-    return {error:"",data:allFollowings,message:"Followers founds"}
+    return {data:allFollowings,message:"Followers founds"}
 }
 
 export async function allFollowers(followerId:number){
@@ -44,5 +44,5 @@ export async function allFollowers(followerId:number){
     const result=allFollowers.map(e=>({...e,isfollowing:data.some(a=>e.followerId==a?.followingId)}))
 
     
-    return {error:"",data:result,message:"Followers founds"}
+    return {data:result,message:"Followers founds"}
 }

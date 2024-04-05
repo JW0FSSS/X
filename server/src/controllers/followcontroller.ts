@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { Follow, UnFollow, allFollow, allFollowers, allFollowings } from "services/followService.js"
+import { Follow, UnFollow,  allFollowers, allFollowings } from "services/followService.js"
 
 
 export async function FollowController(req:Request,res:Response){
@@ -7,10 +7,13 @@ export async function FollowController(req:Request,res:Response){
     const {followingId}=req.body
     const {id}=req
     const followerId=+id
+    try {
+        const data=await Follow(followerId,followingId)
+        res.status(201).json(data)
+    } catch (error) {
+        res.status(400).json({error:error.message})
+    }
 
-    const data=await Follow(followerId,followingId)
-
-    res.json(data)
 
 }
 export async function UnFollowController(req:Request,res:Response){
@@ -18,25 +21,36 @@ export async function UnFollowController(req:Request,res:Response){
     const {id}=req
     const followerId=+id
 
-    const data=await UnFollow(followerId,+followingId)
+    try {
+        const data=await UnFollow(followerId,+followingId)
+        res.status(204).json(data)
+    } catch (error) {
+        res.status(404).json({error:"error unfollow"})
+    }
 
-    res.json(data)
 }
 export async function allFollowingsController(req:Request,res:Response){
     
     const {id}=req
     const followerId=+id
 
-    const data=await allFollowings(followerId)
+    try {
+        const data=await allFollowings(followerId)
+        res.status(200).json(data)
+    } catch (error) {
+        res.status(404).json({error:"Error followings"})
+    }
 
-    res.json(data)
 }
 export async function allFollowersController(req:Request,res:Response){
     
     const {id}=req
     const followerId=+id
 
-    const data=await allFollowers(followerId)
-
-    res.json(data)
+    try {
+        const data=await allFollowers(followerId)
+        res.status(200).json(data)
+    } catch (error) {
+        res.status(404).json({error:"error followers"})
+    }
 }

@@ -1,27 +1,31 @@
 import { RootState } from "../store/store";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { Layaout } from "../layaout/layaout";
 import {  fetchAllFollowers } from "../services/follow";
 import { FollowerCard } from "../components/Followers/follwersButton";
+import { NavFollow } from "../components/navFollow";
+import { useNavigate } from "react-router-dom";
 
 export function Followers() {
-    
+
+    const navigate=useNavigate()
     const [followers,setFollowers]=useState([])
     const user=useSelector((state:RootState)=>state.user)
-   
 
     useEffect(()=>{
         fetchAllFollowers({token:user.token})
         .then(res=>{
-            console.log(res.data)
-            
             setFollowers(res.data)
         })
-
-
     },[])
+
+
+    if (!user.token) {
+        localStorage.removeItem("__user__")
+        navigate("/")}
+
+
     return(
         <Layaout>
                 <section className="ml-[634px] pt-5 w-[630px] border-white/30 border-[1px] border-t-transparent inline-block">
@@ -29,10 +33,7 @@ export function Followers() {
                         <h1 >{user.username}</h1>
                         <span className="text-white/40">@{user.name}</span>
                     </div>
-                    <nav className="grid grid-cols-2 py-3">
-                        <Link to={`/user/${user.username}/followings`} className="text-center">Following</Link>
-                        <Link to={`/user/${user.username}/followers`} className="text-center">Followers</Link>
-                    </nav>
+                    <NavFollow user={user}/>
                     <div className="border-t-[1px] px-3 py-5">
                         {followers.map((e)=>{
                             

@@ -4,7 +4,6 @@ import { fetchFollow, fetchUnFollow } from "../../services/follow"
 export function FollowerCard({token,id,isfollowing}:{token:string,id:number,isfollowing:boolean}) {
 
     let [isfollow,setFollow]=useState<boolean>(isfollowing)
-    console.log(isfollowing);
     
     const handleFollow=(followingId:number)=>{
         fetchFollow({token,followingId})

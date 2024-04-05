@@ -23,6 +23,8 @@ export function Home() {
   useEffect(()=>{
         fetchFeed({token:user.token})
         .then(res=>{
+          console.log(res.data.feed);
+          
           setLoading(false)
           setFeed(res.data.feed)          
         })
@@ -62,7 +64,7 @@ useEffect(()=>{
         <h1 className="text-center border-b-[1px] border-white/30 ">Following</h1>
 
         <Post/>
-        {feed.length<1?
+        {feed.length<1||feed==undefined?
         <h1 className="text-center py-10">There arent post</h1>
         :feed.filter(e=>e!==null).map((post)=><Posts post={post} token={user.token} />)}
       </main>

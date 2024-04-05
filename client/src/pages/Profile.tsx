@@ -1,4 +1,4 @@
-import { Link, Navigate, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { useEffect, useState } from "react"
 import { fetchProfile } from "../services/Profile"
@@ -12,6 +12,7 @@ import { fetchLikePostSame } from "../services/likePost"
 export function Profile() {
 
     const param= useParams()
+    const navigate=useNavigate()
     const user=useSelector((state:RootState)=>state.user)
     const [follows,setFollows]=useState({followers:0,followings:0})
     const [posts,setPost]=useState<IFeed[]>([])
@@ -22,7 +23,7 @@ export function Profile() {
         .then(res=>setFollows({followers:res.data._count.followers,followings:res.data._count.following}))
         .catch(e=>{
             localStorage.removeItem("__user__")
-        return <Navigate to={"/"} replace={true}/>
+        navigate("/")
     })
 
     
@@ -38,7 +39,7 @@ useEffect(()=>{
             })
     },[])
 
-    if (!user.token)return <Navigate to={"/"} replace={true}/>
+    if (!user.token) navigate("/")
 
     return (
         <Layaout>

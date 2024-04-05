@@ -24,7 +24,7 @@ export async function CreateUser(email:string,password:string){
         }
     })
 
-    return {error:"",data:user,message:"user created"}
+    return {data:user,message:"user created"}
 
 }
 export async function DeleteUser(id:number){
@@ -35,7 +35,7 @@ export async function DeleteUser(id:number){
 
     await prisma.user.delete({where:{id}})
 
-    return {error:"",data:{},message:"user deleted"}
+    return {data:{},message:"user deleted"}
 }
 export async function AllUser(userid:number){
 
@@ -51,7 +51,7 @@ export async function AllUser(userid:number){
 
     const alluser=filterUsers.slice(num-5,num)
 
-    return {error:"",data:alluser,message:"users founds"}
+    return {data:alluser,message:"users founds"}
 }
 
 export async function OneUser(id:number){
@@ -62,7 +62,7 @@ export async function OneUser(id:number){
 
      const {createdAt,updatedAt,password,...rest}=userfound
 
-    return {error:"",data:rest,message:"user found"}
+    return {data:rest,message:"user found"}
 }
 
 export async function UpdateUser(name:string,username:string,password:string,id:number){
@@ -80,5 +80,5 @@ export async function UpdateUser(name:string,username:string,password:string,id:
         }})
         
 
-    return {error:"",data:userupdate,message:"user update"}
+    return {data:userupdate,message:"user update"}
 }

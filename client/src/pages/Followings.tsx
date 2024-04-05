@@ -1,16 +1,19 @@
 import { useSelector } from "react-redux";
 import { Layaout } from "../layaout/layaout";
 import { RootState } from "../store/store";
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchAllFollow, fetchFollow, fetchUnFollow } from "../services/follow";
+import { NavFollow } from "../components/navFollow";
+import { useNavigate } from "react-router-dom";
 
 export function Followings() {
 
+    const navigate=useNavigate()
     const [followings,setFollowings]=useState([])
     const user=useSelector((state:RootState)=>state.user)
     let [isfollow,setFollow]=useState<boolean>(true)
 
+    
     const handleFollow=(followingId:number)=>{
         fetchFollow({token:user.token,followingId})
         .then(res=>{
@@ -19,26 +22,26 @@ export function Followings() {
             setFollow(false)
         })
     }
-
+    
     const handleUnFollow=(followingId:number)=>{
         fetchUnFollow({token:user.token,followingId})
         .then(res=>{
-            console.log(res)
-            
             setFollow(false)
         }).catch(e=>{
             setFollow(true)
         })
     }
-
+    
     useEffect(()=>{
         fetchAllFollow({token:user.token})
         .then(res=>{
             setFollowings(res.data)
         })
-
-
     },[])
+
+    if (!user.token) {
+        localStorage.removeItem("__user__")
+        navigate("/")}
 
     return(
         <Layaout>
@@ -47,10 +50,7 @@ export function Followings() {
                         <h1 >{user.username}</h1>
                         <span className="text-white/40">@{user.name}</span>
                     </div>
-                    <nav className="grid grid-cols-2 py-3">
-                    <Link to={`/user/${user.username}/followings`} className="text-center">Following</Link>
-                        <Link to={`/user/${user.username}/followers`} className="text-center">Followers</Link>
-                    </nav>
+                    <NavFollow user={user}/>
                     <div className="border-t-[1px] px-3 py-5">
                         {followings.map(({following})=>{
                             return(

@@ -6,11 +6,11 @@ export async function CreateComment(userId:number,postId:number,content:string){
     
     const postexist=await prisma.post.findUnique({where:{id:postId}})
 
-    if (!postexist) return {error:"Post not found",data:{},message:"Post not found"}
+    if (!postexist) throw new Error("Post not found")
 
     const comment=await prisma.comment.create({data:{content,postId,userId}})
 
-    return {error:"",data:comment,message:"Commented"}
+    return {data:comment,message:"Commented"}
     
 }
 
@@ -24,26 +24,26 @@ export async function AllComment(postId:number,userId:number){
     
     const comments=allcomments.map(comment=>({...comment,liked:resolve.some(likecomment=>likecomment?.commentId==comment.id)}))
 
-    return {error:"",data:comments,message:"all comments"}
+    return {data:comments,message:"all comments"}
     
 }
 export async function DeleteComment(userId:number,postId:number){
     
     const comment=await prisma.comment.findMany({where:{AND:[{postId},{userId}]}})
     
-    if (!comment || comment.length<1) return {error:"Comment not found",data:{},message:"Comment not found"}
+    if (!comment || comment.length<1) throw new Error("Comment not found") 
 
-    return {error:"Comment deleted",data:{comment},message:"Comment deleted"}
+    return {data:{comment},message:"Comment deleted"}
 }
 
 export async function UpdateComment(userId:number,content:string,commentId:number){
     
     const commentexist= await prisma.comment.findUnique({where:{id:commentId}})
 
-    if (!commentexist) return {error:"Comment not found",data:{},message:"Comment not found"}
-    if (commentexist.userId!==userId) return {error:"Unautorizate",data:{},message:"Unautorizate"}
+    if (!commentexist) throw new Error("Comment not found") 
+    if (commentexist.userId!==userId) throw new Error("Unauthorizate") 
 
     const comment=await prisma.comment.update({where:{id:commentId},data:{content,}})
     
-    return {error:"",data:comment,message:"Comment updated"}
+    return {data:comment,message:"Comment updated"}
 }
