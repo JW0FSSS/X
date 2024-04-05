@@ -36,7 +36,10 @@ export function FollowCard({user,token}:{user:IUser,token:string}) {
                 <h4>@{user.name}</h4>
               </div>
               <div>
-                <button onClick={()=>isfollow?handleUnFollow(user.id):handleFollow(user.id)} className="rounded-3xl bg-secondary px-4 py-2">{isfollow?"Unfollow":"Follow"}</button>
+                <button onClick={()=>isfollow?handleUnFollow(user.id):handleFollow(user.id)} className={`${isfollow?"hover:border-red-400 hover:border-[1px] hover:bg-transparent hover:text-red-400":""} group rounded-3xl bg-secondary px-4 py-2`}>
+                    <span className="group-hover:hidden">{isfollow?"Unfollow":"Follow"}</span>
+                    <span className="hidden group-hover:inline-block">{isfollow?"Unfollowing":"Following"}</span>
+                    </button>
               </div>
             </article>
     )

@@ -12,11 +12,15 @@ export async function CreateUser(email:string,password:string){
 
     const passEncoded=await EncodedPassword(password)
 
+    const nameDefault=email.split("@")[0]
+
     const user=await prisma.user.create({
         data:{
             email,
             password:passEncoded,
-            image:"https://www.testhouse.net/wp-content/uploads/2021/11/default-avatar.jpg"
+            image:"https://www.testhouse.net/wp-content/uploads/2021/11/default-avatar.jpg",
+            username:nameDefault,
+            name:nameDefault,
         }
     })
 
