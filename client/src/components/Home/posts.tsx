@@ -54,7 +54,7 @@ export function Posts({post,token}:{post:IFeed,token:string,}) {
                   </div>
                     <span className="text-white/40 ">{date.toLocaleString("es-es", { timeZone: 'UTC' })}</span>
                 </div>
-                <h2 className="text-2xl my-5">{post.content}</h2>
+                <h2 className="text-lg my-5">{post.content}</h2>
               </div>
               <div className="flex gap-20">
               <div className="hover:text-blue-500  transition-all duration-300 flex gap-2 items-center hover:cursor-pointer " onClick={()=>handleNavigate(post.id)}><CommentIcon/><span>{`${post._count.comments}`}</span></div>

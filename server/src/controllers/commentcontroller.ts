@@ -18,8 +18,11 @@ export async function CreateCommentController(req:Request,res:Response){
 export async function allCommentController(req:Request,res:Response){
 
     const {postId}=req.params
-    const id=+postId
-    const data=await AllComment(id)
+    const post=+postId
+    const {id}=req
+    const userid=id
+
+    const data=await AllComment(post,userid)
 
     res.json(data)
 

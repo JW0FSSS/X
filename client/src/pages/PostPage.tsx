@@ -43,8 +43,10 @@ export function PostPage() {
                 }
                 
                 setPost([res.data])})
+
             fetchComments({token:user.token,postId:id||"1"})
-            .then(res=>setComments(res.data))
+            .then(res=>{
+                setComments(res.data)})
         },[])
         
     return(
@@ -63,7 +65,7 @@ export function PostPage() {
                 </form>
                 </div>
                 <div>
-                {comments.map((comment)=><Comment comment={comment} id={+param.id!}/>)}
+                {comments.map((comment)=><Comment comment={comment} token={user.token}/>)}
                 </div>
                 </section>
             </Layaout>

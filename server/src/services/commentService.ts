@@ -14,9 +14,15 @@ export async function CreateComment(userId:number,postId:number,content:string){
     
 }
 
-export async function AllComment(postId:number){
+export async function AllComment(postId:number,userId:number){
     
-    const comments=await prisma.comment.findMany({where:{postId},include:{user:{select:{image:true,username:true,name:true}},_count:{select:{likes:true}}}})
+    const allcomments=await prisma.comment.findMany({where:{postId},include:{user:{select:{image:true,username:true,name:true}},_count:{select:{likes:true}}},orderBy:{createdAt:"desc"},take:6})
+    
+    const likedcomments=allcomments.map(async(comment)=>await prisma.like_Comment.findFirst({where:{AND:{commentId:comment.id,userId}}}))
+    
+    const resolve=(await Promise.all(likedcomments)).filter(e=>e!==null)
+    
+    const comments=allcomments.map(comment=>({...comment,liked:resolve.some(likecomment=>likecomment?.commentId==comment.id)}))
 
     return {error:"",data:comments,message:"all comments"}
     

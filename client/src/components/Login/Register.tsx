@@ -17,6 +17,7 @@ export default function Register({isModalOpen,setModal}:{isModalOpen:boolean,set
         setTimeout(() => {
             setMessage("")
         }, 2000);
+        e.target.reset()
 }).catch(e=>{
     setMessage(e.message+" user")
     setTimeout(() => {

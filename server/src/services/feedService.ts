@@ -15,7 +15,7 @@ export async function Feed(userId:number) {
     
     const likedpost=await Promise.all(likes)
 
-    const wellFeed=feed.map(post=>({...post,liked:(likedpost.some(liked=>liked?.userId==userId&&liked.postId==post?.id))}))
+    const wellFeed=feed.map(post=>({...post,liked:likedpost.some(liked=>liked?.userId==userId&&liked.postId==post?.id)}))
 
     return {error:"feed",data:{feed:wellFeed},message:"feed"}
     
