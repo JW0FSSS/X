@@ -9,7 +9,7 @@ import { Terms } from "./terms"
 export function RigthZone() {
 
     const [login,setLogin]=useState<Record<string,string>>({email:"",password:""})
-    const [isModalOpen,setModal]=useState(false)
+    const [isModalOpen,setModal]=useState<boolean>(false)
     const dispatch=useDispatch()
 
     const handleSubmit=(e:React.FormEvent<HTMLFormElement>)=>{
@@ -41,8 +41,8 @@ export function RigthZone() {
 
                     <h2 className='text-3xl mt-5'>Unete hoy</h2>
                     <form  className='text-black' id='login' onSubmit={handleSubmit}>
-                        <input className='rounded-3xl pl-4 pr-32 py-1 mb-4' type="email" name='email' placeholder='anonimo@gmail.com' onChange={handleChange}/>
-                        <input className='rounded-3xl pl-4 pr-32 py-1' type="password" name='password' placeholder='*********' onChange={handleChange}/>
+                        <input className='rounded-3xl pl-4 pr-32 py-1 outline-none mb-4' type="email" name='email' placeholder='anonimo@gmail.com' onChange={handleChange}/>
+                        <input className='rounded-3xl pl-4 pr-32 py-1 outline-none' type="password" name='password' placeholder='*********' onChange={handleChange}/>
                     </form>
                     <div className='text-white/60 flex items-center'>
                         <div className='w-[150px] border-b-2  border-white/60 inline-block'></div>
@@ -50,8 +50,8 @@ export function RigthZone() {
                         <div className='min-w-[150px] border-b-2 border-white/60 inline-block '></div>
                     </div>
                     <div className='flex flex-col gap-2'>
-                        <button onClick={handleModal} className='py-2 px-28 bg-secondary rounded-3xl'>Crear Account</button>
-                        <div className='text-xs '>
+                        <button onClick={handleModal} className='py-2 px-24 bg-secondary rounded-3xl text-md'>Crear Account</button>
+                        <div className='text-xs'>
                             <Terms/>  
                         </div>
                     </div>

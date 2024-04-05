@@ -15,7 +15,8 @@ export async function CreateUser(email:string,password:string){
     const user=await prisma.user.create({
         data:{
             email,
-            password:passEncoded
+            password:passEncoded,
+            image:"https://www.testhouse.net/wp-content/uploads/2021/11/default-avatar.jpg"
         }
     })
 
@@ -40,7 +41,11 @@ export async function AllUser(userid:number){
     
     const filterUsers=userSugerency.filter(user=>alreadyFollowings.data.some(e=>e.followingId==user.id)?false:true)
 
-    const alluser=filterUsers.slice(0,10)
+    const len=filterUsers.length
+
+    const num=Math.floor(Math.random()*len)
+
+    const alluser=filterUsers.slice(num-5,num)
 
     return {error:"",data:alluser,message:"users founds"}
 }
