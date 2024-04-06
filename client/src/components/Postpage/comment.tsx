@@ -1,34 +1,11 @@
-import { useState } from "react"
+
 import { Fav } from "../../icons/fav"
-import { fetchDisLikeComment, fetchLikeComment } from "../../services/likeComment"
 import { IComments } from "../../types/comments"
+import { useLikeComment } from "../../hooks/useLikeComment"
 
 export function Comment({comment,token}:{comment:IComments,token:string}) {
 
-    const [isliked,setLiked]=useState(comment.liked)
-    let [countlikes,setCountLikes]=useState<number>(comment._count.likes)
-
-    const handleFav=(id:number)=>[
-        fetchLikeComment({commentId:id,token})
-        .then(res=>{
-            setCountLikes(prev=>prev+1)
-            setLiked(!isliked)})
-        .catch(e=>{
-            setCountLikes(prev=>prev-1)
-            setLiked(!isliked)
-        })
-    ]
-
-    const handleUnFav=(id:number)=>[
-        fetchDisLikeComment({commentId:id,token})
-        .then(res=>{
-            setCountLikes(prev=>prev-1)
-            setLiked(!isliked)})
-        .catch(e=>{
-            setCountLikes(prev=>prev+1)
-            setLiked(!isliked)
-        })
-    ]
+    const {countlikes,handleDisLikeComment,handleLikeComment,isliked}=useLikeComment({token,liked:comment.liked,likes:comment._count.likes})
 
     
     const date=new Date(comment.createdAt)
@@ -41,8 +18,11 @@ export function Comment({comment,token}:{comment:IComments,token:string}) {
              <span className="text-white/40">{date.toLocaleString("es-es", { timeZone: 'UTC' })}</span>
         </div>
         <h2 className="text-md">{comment.content}</h2>
-        <div className={`${isliked?"hover:text-white text-red-500":"hover:text-red-500 text-white"} transition-all duration-300 flex gap-2 items-center hover:cursor-pointer absolute top-3 right-3`} onClick={()=>isliked?handleUnFav(comment.id):handleFav(comment.id)}>
-            <Fav/><span>{countlikes}</span>
+        <div className={`${isliked?"text-red-500":"hover:text-red-500 text-white"} group flex gap-2 items-center hover:cursor-pointer absolute top-3 right-3`} onClick={()=>isliked?handleDisLikeComment(comment.id):handleLikeComment(comment.id)}>
+            <div className="group-hover:bg-red-500/30 group-hover:rounded-full transition-opacity duration-900 p-2 ">
+                <Fav/>
+            </div>
+            <span className="-ml-2">{countlikes}</span>
         </div>
         </article>
     )

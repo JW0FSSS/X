@@ -18,7 +18,7 @@ export async function VerifyAuth(req:Request,res:Response,next:NextFunction) {
         next() 
     } catch (e) {
         const auth=new AuthError("Authorization incorrect o expired")
-        res.status(auth.status).json({error:auth.message,data:{},message:auth.message})
+        res.status(auth.status).json({error:auth.message})
     }
     
 

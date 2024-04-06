@@ -38,18 +38,12 @@ export function SideBar() {
                 <div className="">
                     <X size={10}/>
                 </div>
-                <div className="flex flex-col gap-5 items-start text-xl w-full">
-                    <div className="flex gap-10">
-                    <HomeIcon/>
-                    <Link to="/home">Home</Link>
-                    </div>
-                    <div  className="flex gap-10">
-                        <ProfileIcon/>
-                    <Link to={`/user/${user.username}`} >Profile</Link>
-                    </div>
+                <div className="flex flex-col items-start text-xl w-full">
+                    <Link to="/home" className="flex gap-5 pr-5  hover:bg-opacity-50 hover:bg-gray-700/40 rounded-3xl py-2 px-4 transition-opacity duration-300"><HomeIcon/> Home</Link>  
+                    <Link to={`/user/${user.username}`} className="flex gap-5 pr-5  hover:bg-opacity-50 hover:bg-gray-700/40 rounded-3xl py-2 px-4 transition-opacity duration-300" ><ProfileIcon/> Profile</Link>
                 </div>
                 <div>
-                    <button className="bg-secondary px-24 py-2 rounded-3xl" onClick={()=>setModal(!ismodalOpen)}>Post</button>
+                    <button className="bg-secondary hover:bg-opacity-85 transition-opacity duration-300 px-24 py-2 rounded-3xl" onClick={()=>setModal(!ismodalOpen)}>Post</button>
                 </div>
                 <div className={`${ismodalOpen?"":"hidden"} bg-blue-400/10 bg-opacity-70 backdrop-blur-[3px] fixed top-0 right-0 left-0 z-50 w-full md:inset-0 max-w-full max-h-full`}>
                     <div className="relative p-4 w-full top-20 left-1/3 ">

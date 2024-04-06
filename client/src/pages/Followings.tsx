@@ -1,47 +1,33 @@
 import { useSelector } from "react-redux";
 import { Layaout } from "../layaout/layaout";
 import { RootState } from "../store/store";
-import { useEffect, useState } from "react";
-import { fetchAllFollow, fetchFollow, fetchUnFollow } from "../services/follow";
+import {  usefetchAllFollowings } from "../services/follow";
 import { NavFollow } from "../components/navFollow";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { FollowerCard } from "../components/Followers/follwersButton";
+import { useState, useEffect } from "react";
+import { fetchProfile } from "../services/Profile";
 
 export function Followings() {
 
+    const param=useParams()
     const navigate=useNavigate()
-    const [followings,setFollowings]=useState([])
     const user=useSelector((state:RootState)=>state.user)
-    let [isfollow,setFollow]=useState<boolean>(true)
+    const [profile,setProfile]=useState({})
+    const {error,followings,loading}=usefetchAllFollowings({token:user.token,username:param.username!})
 
-    
-    const handleFollow=(followingId:number)=>{
-        fetchFollow({token:user.token,followingId})
-        .then(res=>{
-            setFollow(true)
-        }).catch(e=>{
-            setFollow(false)
-        })
-    }
-    
-    const handleUnFollow=(followingId:number)=>{
-        fetchUnFollow({token:user.token,followingId})
-        .then(res=>{
-            setFollow(false)
-        }).catch(e=>{
-            setFollow(true)
-        })
-    }
-    
     useEffect(()=>{
-        fetchAllFollow({token:user.token})
-        .then(res=>{
-            setFollowings(res.data)
-        })
+        fetchProfile({token:user.token,username:param.username!})
+        .then(res=>setProfile({...res.data}))
     },[])
+
 
     if (!user.token) {
         localStorage.removeItem("__user__")
         navigate("/")}
+    
+    if (loading) return <>Loading</>
+        
 
     return(
         <Layaout>
@@ -50,9 +36,9 @@ export function Followings() {
                         <h1 >{user.username}</h1>
                         <span className="text-white/40">@{user.name}</span>
                     </div>
-                    <NavFollow user={user}/>
+                    <NavFollow user={profile}/>
                     <div className="border-t-[1px] px-3 py-5">
-                        {followings.map(({following})=>{
+                        {error?<h1 className="text-center">Ha ocurrido un error</h1>:followings.map(({following})=>{
                             return(
                                 <article key={following.id} className="flex justify-between mb-5">
                                     <div className="flex gap-5">
@@ -62,12 +48,7 @@ export function Followings() {
                                             <h1 className="text-white/40">@{following.username}</h1>
                                         </div>
                                     </div>
-                                    <div >
-                                        <button onClick={()=>isfollow?handleUnFollow(following.id):handleFollow(following.id)} className={`${isfollow?"hover:border-red-400 hover:border-[1px] hover:text-red-400":""} group bg-transparent border-[1px] border-white rounded-3xl px-2 py-1`}>
-                                            <p className="group-hover:hidden">{isfollow?"Following":"Follow"}</p>
-                                             <p className="hidden group-hover:inline-block">{isfollow?"UnFollowing":"Following"}</p>
-                                         </button>
-                                    </div>
+                                    <FollowerCard token={user.token} id={following.id} isfollowing={true}/>
                                 </article>
                             )
                         })}

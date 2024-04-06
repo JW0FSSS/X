@@ -9,7 +9,7 @@ export async function fetchComment({postId,content,token}:{postId:string,content
         },
         body:JSON.stringify({postId,content})
     })
-
+    if (res.status!=201) throw new Error("Error");
     const data= await res.json()
     return data
 }
@@ -22,7 +22,7 @@ export async function fetchComments({postId,token}:{postId:string,token:string})
             "Authorization":`Bearer ${token}`
         },
     })
-
+    if (res.status!=200) throw new Error("Error");
     const data= await res.json()
     return data
 }

@@ -1,5 +1,5 @@
 import { VerifyAuth } from "../middlewares/AuthMiddleware.js";
-import { AllUserController, CreateUserController, DeleteUserController, OneUserController, UpdateUserController } from "../controllers/userController.js";
+import { AllUserController, CreateUserController, DeleteUserController, OneUserController, ProfileController, UpdateUserController } from "../controllers/userController.js";
 import { Router } from "express";
 import { ValidateRegister } from "dto/CreateUserDto.js";
 
@@ -10,3 +10,4 @@ userRoute.get("/users",VerifyAuth,AllUserController)
 userRoute.get("/users/user",VerifyAuth,OneUserController)
 userRoute.put("/users/",VerifyAuth,UpdateUserController)
 userRoute.delete("/users/",VerifyAuth,DeleteUserController)
+userRoute.get("/users/:username",VerifyAuth,ProfileController)

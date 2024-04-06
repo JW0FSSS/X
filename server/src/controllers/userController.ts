@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { AllUser, CreateUser, DeleteUser, OneUser, UpdateUser } from "../services/userService.js"
+import { AllUser, CreateUser, DeleteUser, OneUser, ProfileUser, UpdateUser } from "../services/userService.js"
 import { AuthError } from "Errors/Auth.js"
 import { ErrorNotFound } from "Errors/Not_Found.js"
 import { ConflictError } from "Errors/Conifct.js"
@@ -49,8 +49,25 @@ export async function OneUserController(req:Request,res:Response){
     
     const {id}=req
     const userid=+id
+    
     try {
         const data=await OneUser(userid)
+        res.status(200).json(data)
+    } catch (e) {
+        const NotFound=new ErrorNotFound(e.error)
+        res.status(NotFound.status).json({error:NotFound.message,data:{},message:NotFound.message})
+    }
+
+}
+
+export async function ProfileController(req:Request,res:Response){
+    
+    const {username}=req.params
+    const {id}=req
+    const userid=+id
+    
+    try {
+        const data=await ProfileUser(userid,username)
         res.status(200).json(data)
     } catch (e) {
         const NotFound=new ErrorNotFound(e.error)

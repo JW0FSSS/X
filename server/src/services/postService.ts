@@ -28,17 +28,16 @@ export async function AllPost(){
 }
 
 export async function OnePost(postId:number,id:number){
-
-    const postFound= await prisma.post.findFirst({where:{id:postId},include:{user:{select:{image:true,username:true,name:true}},_count:{select:{likes:true,comments:true}}}})
-
-    if (!postFound)  throw new Error("Post not found") 
-    const userLike=await prisma.like_Post.findFirst({where:{ AND:{postId,userId:id}}})
     
-    if (userLike?.id) {
-        postFound.liked=true
-    }else{
-        postFound.liked=false
-    }
+    let userLike
+    
+    const postFound= await prisma.post.findFirst({where:{id:postId},include:{user:{select:{image:true,username:true,name:true}},_count:{select:{likes:true,comments:true}}}})
+    
+    if (!postFound)  throw new Error("Post not found") 
+    
+    if (id) userLike=await prisma.like_Post.findFirst({where:{ AND:{postId,userId:id}}})
+    
+    postFound.liked=userLike?.id?true:false
 
     return {data:postFound,message:"post found"}
 }
@@ -52,11 +51,17 @@ export async function AllPostUser(id:number){
     return {data:postFound,message:"post found"}
 }
 
-export async function AllPostbyUser(username:string){
+export async function AllPostbyUser(username:string,userId:number){
 
-    const postFound= await prisma.post.findMany({where:{user:{username}},include:{_count:{select:{comments:true,likes:true}},user:{select:{image:true,username:true,name:true}}}})
+    const posts= await prisma.post.findMany({where:{user:{username}},include:{_count:{select:{comments:true,likes:true}},user:{select:{image:true,username:true,name:true}}},orderBy:{createdAt:"desc"},take:6})
 
-    if (!postFound)  throw new Error("Post not found")
+    if (!posts)  throw new Error("Post not found")
+
+    const likes=posts.map(async(post)=>await prisma.like_Post.findFirst({where:{AND:{userId,postId:post?.id}}}))
+  
+    const likedpost=await Promise.all(likes)
+  
+    const postFound=posts.filter(e=>e!=null).map(post=>({...post,liked:likedpost.some(liked=>liked?.userId==userId&&liked.postId==post?.id)}))
 
     return {data:postFound,message:"post found"}
 }

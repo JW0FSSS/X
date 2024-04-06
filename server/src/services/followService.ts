@@ -26,18 +26,26 @@ export async function UnFollow(followerId:number,followingId:number){
     return {data:{UnFollow},message:"UnFollow"}
 }
 
-export async function allFollowings(followerId:number){
-    
-    const allFollowings= await prisma.follow.findMany({where:{followerId},include:{following:{select:{id:true,image:true,name:true,username:true}}}})
+export async function allFollowings(username:string){
+
+    const followerId=await prisma.user.findFirst({where:{username}})
+
+    if (!followerId?.id) throw new Error("user Not found");
+
+    const allFollowings= await prisma.follow.findMany({where:{followerId:followerId.id},include:{following:{select:{id:true,image:true,name:true,username:true}}}})
 
     return {data:allFollowings,message:"Followers founds"}
 }
 
-export async function allFollowers(followerId:number){
+export async function allFollowers(username:string){
     
-    const allFollowers= await prisma.follow.findMany({where:{followingId:followerId},include:{follower:{select:{id:true,image:true,name:true,username:true}}}})
+    const followerId=await prisma.user.findFirst({where:{username}})
 
-    const isfollowing=allFollowers.map(async(e)=>await prisma.follow.findFirst({where:{AND:{followerId:followerId,followingId:e.followerId}}}))
+    if (!followerId?.id) throw new Error("user Not found");
+
+    const allFollowers= await prisma.follow.findMany({where:{followingId:followerId.id},include:{follower:{select:{id:true,image:true,name:true,username:true}}}})
+
+    const isfollowing=allFollowers.map(async(e)=>await prisma.follow.findFirst({where:{AND:{followerId:followerId.id,followingId:e.followerId}}}))
 
     const data=await Promise.all(isfollowing)
 

@@ -22,7 +22,7 @@ export async function DisLikePost(userId:number,postId:number){
     const postexist=await prisma.post.findUnique({where:{id:postId}})
 
     if (!postexist) throw new Error("Post not found") 
-
+        
     const disLike=await prisma.like_Post.deleteMany({where:{AND:[{userId},{postId}]}})
     
     return {data:{disLike},message:"Dislike"}

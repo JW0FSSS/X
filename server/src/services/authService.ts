@@ -16,5 +16,5 @@ export async function AuthUser(email:string,password:string) {
 
     const token=await CreateJwt(user.id)
 
-    return {data:{token},message:"User Authenticated"}
+    return {data:{token,username:user.username},message:"User Authenticated"}
 }

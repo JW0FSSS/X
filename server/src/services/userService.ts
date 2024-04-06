@@ -39,9 +39,13 @@ export async function DeleteUser(id:number){
 }
 export async function AllUser(userid:number){
 
+    const user=await prisma.user.findFirst({where:{id:userid}})
+
+    if(!user?.id) throw new Error("User not found")
+
     const userSugerency= await prisma.user.findMany({where:{NOT:{id:userid}},select:{username:true,name:true,image:true,id:true},take:50})
 
-    const alreadyFollowings=await allFollowings(userid)
+    const alreadyFollowings=await allFollowings(user?.username!)
     
     const filterUsers=userSugerency.filter(user=>alreadyFollowings.data.some(e=>e.followingId==user.id)?false:true)
 
@@ -50,7 +54,7 @@ export async function AllUser(userid:number){
     const num=Math.floor(Math.random()*len)
 
     const alluser=filterUsers.slice(num-5,num)
-
+    
     return {data:alluser,message:"users founds"}
 }
 
@@ -58,6 +62,17 @@ export async function OneUser(id:number){
 
     const userfound= await prisma.user.findFirst({where:{id},include:{_count:{select:{followers:true,following:true}}}})
 
+    if (!userfound) throw {error:"User not found"}
+
+     const {createdAt,updatedAt,password,...rest}=userfound
+
+    return {data:rest,message:"user found"}
+}
+
+export async function ProfileUser(id:number,username:string){
+
+    const userfound= await prisma.user.findFirst({where:{username},include:{_count:{select:{followers:true,following:true}}}})
+    
     if (!userfound) throw {error:"User not found"}
 
      const {createdAt,updatedAt,password,...rest}=userfound

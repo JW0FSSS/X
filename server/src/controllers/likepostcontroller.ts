@@ -21,7 +21,7 @@ export async function DisLikePostController(req:Request,res:Response){
     const {postId}=req.body
     const {id}=req
     const userId=+id
-
+    
     try {
         const data=await DisLikePost(userId,postId)
         res.status(204).json(data)

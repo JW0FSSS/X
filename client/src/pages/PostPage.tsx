@@ -35,18 +35,19 @@ export function PostPage() {
     
     
     useEffect(()=>{
-        const {id}=param
-            fetchOnePost({token:user.token,id:id||"|"})
-            .then(res=>{
-                if (res.error!="") {
-                    localStorage.removeItem("__user__")
-                }
-                
-                setPost([res.data])})
+            fetchOnePost({token:user.token,id:param.id||"|"})
+            .then(res=>setPost([res.data]))
+            .catch(e=>{
+                localStorage.clear()
+                window.location.href='/'
+            })
 
-            fetchComments({token:user.token,postId:id||"1"})
-            .then(res=>{
-                setComments(res.data)})
+            user.token?fetchComments({token:user.token,postId:param.id||"1"})
+            .then(res=>setComments(res.data))
+            .catch(e=>{
+                localStorage.clear()
+                window.location.href='/'
+            }):null
         },[])
         
     return(
@@ -60,12 +61,12 @@ export function PostPage() {
                     <input onChange={handleChange} placeholder="¿What is happening?!!" maxLength={120} className=" resize-none bg-transparent w-5/6  border-white/30 focus:outline-none ml-20 my-10 pb-10 ">
                     </input>
                     <div className="flex justify-between  items-center mx-5 mb-2">
-                    <button type="submit" className="bg-secondary rounded-3xl px-4 py-2 absolute bottom-3 right-3">Comment</button>
+                    <button type="submit" className="bg-secondary hover:bg-opacity-85 transition-opacity duration-300 rounded-3xl px-4 py-2 absolute bottom-3 right-3">Comment</button>
                     </div>
                 </form>
                 </div>
                 <div>
-                {comments.map((comment)=><Comment comment={comment} token={user.token}/>)}
+            {comments.map((comment)=><Comment comment={comment} token={user.token}/>)}
                 </div>
                 </section>
             </Layaout>

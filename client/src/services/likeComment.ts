@@ -10,7 +10,7 @@ export async function fetchLikeComment({commentId,token}:{commentId:number,token
         body:JSON.stringify({commentId})
     })
 
-    if (res.status!=200) throw new Error("failed")
+    if (res.status!=201) throw new Error("failed")
 
     const data= await res.json()
     return data
@@ -25,8 +25,8 @@ export async function fetchDisLikeComment({commentId,token}:{commentId:number,to
         },
         body:JSON.stringify({commentId})
     })
-
-    if (res.status!=200) throw new Error("failed")
+    
+    if (res.status==204) return
 
     const data= await res.json()
     return data

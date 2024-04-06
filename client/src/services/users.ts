@@ -1,16 +1,29 @@
+import { useEffect, useState } from "react";
 import { URL } from "../Const/url";
+import { IUser } from "../types/user";
 
-export async function fetchUsers({token}:{token:string}) {
-    const res =await fetch(`${URL}/users`,{
-        method:"get",
-        headers:{
-            "Content-type":"application/json",
-            "Authorization":`Bearer ${token}`
-        }
-    })
+export function usefetchUsers({token}:{token:string}) {
 
-    if (res.status!=200) throw new Error("No autorization")
+    const[sugerency,setSugerency]=useState<IUser[]>([])
+    const[isloadingUsers,setLoading]=useState<boolean>(true)
+    const[errorUsers,setError]=useState("")
 
-    const data = await res.json()
-    return data
+    useEffect(()=>{
+        fetch(`${URL}/users`,{
+            method:"get",
+            headers:{
+                "Content-type":"application/json",
+                "Authorization":`Bearer ${token}`
+            }
+        }).then(res=>{
+            if (res.status!=200) throw new Error("No autorization")
+               return res.json()
+        }).then(data=>{
+            setSugerency(data.data)
+        }).catch(e=>setError("error"))
+        .finally(()=>setLoading(false))
+
+    },[])
+
+    return {sugerency,errorUsers,isloadingUsers}
 }

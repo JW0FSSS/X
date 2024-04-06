@@ -17,6 +17,7 @@ export function RigthZone() {
         const {email,password}=login
         fetchLogin({email,password})
         .then(res=>{
+
             const {token}=res.data
             dispatch(setToken({token}))
     })

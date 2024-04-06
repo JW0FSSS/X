@@ -1,15 +1,32 @@
+import { useEffect, useState } from "react";
 import { URL } from "../Const/url";
+import { IFeed } from "../types/fedd";
 
-export async function fetchFeed({token}:{token:string}){
-    const res= await fetch(`${URL}/feed`,{
-        method:"get",
-        headers:{
-            "Content-type":"application/json",
-            "Authorization":`Bearer ${token}`
-        }
+export function usefetchFeed({token}:{token:string}){
+    
+    const[feed,setFeed]=useState<IFeed[]>([])
+    const[isloadingFeed,setLoading]=useState<boolean>(true)
+    const[errorFeed,setError]=useState("")
+    
+    useEffect(()=>{
+        fetch(`${URL}/feed`,{
+            method:"get",
+            headers:{
+                "Content-type":"application/json",
+                "Authorization":`Bearer ${token}`
+            }
+        }).then(res=>{
+            if (res.status!=200) throw new Error("No autorization")
+                return res.json()
+        }).then(data=>setFeed(data.data.feed))
+        .catch(e=>{
+            setError("error")
+            localStorage.removeItem("__user__")
+            window.location.href="/"
+          }).finally(()=>setLoading(false))
 
-    })
-    if (res.status!=200) throw new Error("No autorization")
-    const data =await res.json()
-    return data
+
+    },[])
+    
+    return {feed,isloadingFeed,errorFeed}
 }

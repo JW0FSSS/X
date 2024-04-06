@@ -64,9 +64,9 @@ export async function AllPostUserController(req:Request,res:Response){
 export async function AllPostByUserController(req:Request,res:Response){
     
     const {user}=req.params
-
+    const {id}=req
     try {
-        const data=await AllPostbyUser(user)
+        const data=await AllPostbyUser(user,id)
         res.status(200).json(data)
     } catch (error) {
         res.status(404).json({error:error.message})

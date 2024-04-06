@@ -1,29 +1,32 @@
 import { RootState } from "../store/store";
-import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Layaout } from "../layaout/layaout";
-import {  fetchAllFollowers } from "../services/follow";
+import {  usefetchAllFollowers } from "../services/follow";
 import { FollowerCard } from "../components/Followers/follwersButton";
 import { NavFollow } from "../components/navFollow";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { fetchProfile } from "../services/Profile";
 
 export function Followers() {
 
+    const param=useParams()
     const navigate=useNavigate()
-    const [followers,setFollowers]=useState([])
     const user=useSelector((state:RootState)=>state.user)
+    const [profile,setProfile]=useState({})
+    const {followers,loading,error}=usefetchAllFollowers({token:user.token,username:param.username!})
+
 
     useEffect(()=>{
-        fetchAllFollowers({token:user.token})
-        .then(res=>{
-            setFollowers(res.data)
-        })
+        fetchProfile({token:user.token,username:param.username!})
+        .then(res=>setProfile({...res.data}))
     },[])
-
 
     if (!user.token) {
         localStorage.removeItem("__user__")
         navigate("/")}
+
+    if (loading) return <>Loading</>
 
 
     return(
@@ -33,9 +36,9 @@ export function Followers() {
                         <h1 >{user.username}</h1>
                         <span className="text-white/40">@{user.name}</span>
                     </div>
-                    <NavFollow user={user}/>
+                    <NavFollow user={profile}/>
                     <div className="border-t-[1px] px-3 py-5">
-                        {followers.map((e)=>{
+                        {error?<h1 className="text-center">Ha ocurrido un error</h1>:followers.map((e)=>{
                             
                             return(
                                 <article key={e.follower.id} className="flex justify-between mb-5">
