@@ -10,6 +10,7 @@ import { commentRoute } from "routes/comment.js";
 import { likepostRoute } from "routes/like_post.js";
 import { likecommentRoute } from "routes/like_comment.js";
 import { feedRoute } from "routes/feed.js";
+import { upserver } from "routes/ping.js";
 
 const app = express()
 
@@ -17,6 +18,7 @@ app.use(cors({origin:"*"}))
 app.use(express.json())
 
 app.use("/api",userRoute)
+app.use("/api",upserver)
 app.use("/api",authRoute)
 app.use("/api",postRoute)
 app.use("/api",followRoute)

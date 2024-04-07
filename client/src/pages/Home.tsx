@@ -33,7 +33,7 @@ export function Home() {
 },[])
   
   if (!user.token)  return  window.location.href="/"
-  if (isloading) return <h1>Loading.....</h1>
+  if (isloading) return <h1>Loading....</h1>
 
   return (
     <Layaout>

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import Register from "./Register"
 import { fetchLogin } from "../../services/Login"
@@ -6,7 +6,7 @@ import { setToken } from "../../store/userSlice"
 import { Terms } from "./terms"
 
 
-export function RigthZone() {
+export function RigthZone({setLoading}:{setLoading:any}) {
 
     const [login,setLogin]=useState<Record<string,string>>({email:"",password:""})
     const [isModalOpen,setModal]=useState<boolean>(false)
@@ -17,7 +17,6 @@ export function RigthZone() {
         const {email,password}=login
         fetchLogin({email,password})
         .then(res=>{
-
             const {token}=res.data
             dispatch(setToken({token}))
     })
@@ -32,6 +31,9 @@ export function RigthZone() {
         setModal(!isModalOpen)
     }
 
+    useEffect(()=>{
+        setLoading(false)
+    },[])
 
     return(
         <main id='section2' className='h-[900px] flex items-center justify-center'>
