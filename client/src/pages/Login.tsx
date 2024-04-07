@@ -16,8 +16,7 @@ export default function Login() {
     const [time,setTime]=useState(50)
 
     useEffect(()=>{
-      
-
+    
       const timer=setInterval(()=>{
         setTime(time-1)
       },1000)

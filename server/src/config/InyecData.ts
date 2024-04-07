@@ -1,4 +1,5 @@
 import { PrismaClient} from "@prisma/client";
+import bcrypt from "bcrypt";
 
 const prisma=new PrismaClient()
 
@@ -30,7 +31,7 @@ async function Users() {
           
           
         const users=[
-            {name: "Robert Smith", username: "rsmith", email: "rsmith@example.com", password: "aBcDeF123!", image: "https://www.testhouse.net/wp-content/uploads/2021/11/default-avatar.jpg"},
+            {name: "Robert Smith", username: "rsmith", email: "rsmith@example.com", password: "123456", image: "https://www.testhouse.net/wp-content/uploads/2021/11/default-avatar.jpg"},
             {name: "John Doe", username: "jdoe", email: "jdoe@example.com", password: "P@ssw0rd456", image: "https://www.testhouse.net/wp-content/uploads/2021/11/default-avatar.jpg"},
             {name: "Lisa Johnson", username: "ljohnson", email: "ljohnson@example.com", password: "SecurePass789", image: "https://www.testhouse.net/wp-content/uploads/2021/11/default-avatar.jpg"},
             {name: "Michael Williams", username: "mwilliams", email: "mwilliams@example.com", password: "Random123!", image: "https://www.testhouse.net/wp-content/uploads/2021/11/default-avatar.jpg"},
@@ -42,7 +43,13 @@ async function Users() {
             {name: "Emily Hernandez", username: "ehernandez", email: "ehernandez@example.com", password: "Password123!", image: "https://www.testhouse.net/wp-content/uploads/2021/11/default-avatar.jpg"}
           ]
           
-        
+       /*    const usersecnrypted=users.map(async(user)=>{
+            let passencrypted=await bcrypt.hash(user.password,10)
+            ({...user,password:passencrypted})
+          })
+          
+          const resolveUsers=await Promise.all(usersecnrypted) */
+
         await prisma.user.createMany({data:users})
         console.log("Users created");
         await prisma.post.createMany({data:post})
