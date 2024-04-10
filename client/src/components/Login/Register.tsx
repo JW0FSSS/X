@@ -5,25 +5,30 @@ import { Terms } from "./terms";
 export default function Register({isModalOpen,setModal}:{isModalOpen:boolean,setModal: React.Dispatch<React.SetStateAction<boolean>>}) {
 
   const [create,setCreate]=useState<Record<string,string>>({email:"",password:"",repeat_password:""})
-    const [message,setMessage]=useState<string>("")
+    const [message,setMessage]=useState({msg:"",error:[]})
 
   const handleSubmit=(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault()
     const {email,password,repeat_password}=create
     fetchRegister({email,password,repeat_password})
     .then(res=>{  
-
-        setMessage(res.message)
+        setMessage(prev=>({...prev,msg:res.message}))
         setTimeout(() => {
-            setMessage("")
+            setMessage(prev=>({...prev,msg:""}))
         }, 2000);
         e.target.reset()
-}).catch(e=>{
-    setMessage(e.message+" user")
-    setTimeout(() => {
-            setMessage("")
+    })
+    .catch(errors=>{
+        if (errors instanceof Array) {
+            const msg=errors.map(e=>Object.values(e))
+            setMessage(prev=>({...prev,error:msg}))
+        }else{
+            setMessage(prev=>({...prev,error:[errors.message]}))
+        }
+        setTimeout(() => {
+            setMessage(prev=>({...prev,error:[]}))
         }, 2000);
-})
+    })
 
 }
 
@@ -54,9 +59,6 @@ export default function Register({isModalOpen,setModal}:{isModalOpen:boolean,set
                           <input className='rounded-3xl pl-4 pr-16 py-1 outline-none mb-4' type="password" name='password' placeholder='*********' onChange={handleChange}/>
                           <input className='rounded-3xl pl-4 pr-16 py-1 outline-none' type="password" name='repeat_password' placeholder='*********' onChange={handleChange}/>
                       </form>
-                        <div className={`fixed -bottom-12 right-10 z-50 bg-transparent px-5 py-3 rounded-lg transition-all ease-in-out  text-white ${message?"bottom-20 right-10":""} ${message=="user created"?"border-2 border-green-600":"border-2 border-red-600"}`}>
-                            {message}
-                        </div>
                     </div>
                     <div className='flex flex-col gap-2'>
                         <button  className='py-2 px-16 bg-secondary  text-white rounded-3xl text-md' form="new">Create Account</button>
@@ -67,6 +69,8 @@ export default function Register({isModalOpen,setModal}:{isModalOpen:boolean,set
 
                 </div>
             </div>
+                        {message.error.length!=0?<div className="fixed right-0 bottom-0 z-50  bg-red-900 px-4 py-2 rounded-lg  w-40 transition-all ease-in-out duration-300"><h1 className="text-center">{message.error[0]}</h1></div>:<div className="fixed right-0 -bottom-20 z-50  bg-red-900 px-4 py-2 rounded-lg  transition-all ease-in-out duration-300 w-40"></div>}
+                        {message.msg?<div className="fixed right-0 bottom-0 z-50  bg-green-900 px-4 py-2 rounded-lg  w-40 transition-all ease-in-out duration-300"><h1 className="text-center">{message.msg}</h1></div>:<div className="fixed right-0 -bottom-20 z-50  bg-green-900 px-4 py-2 rounded-lg  transition-all ease-in-out duration-300 w-40"></div>}
         </div>
       </>
 

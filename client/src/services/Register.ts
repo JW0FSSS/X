@@ -9,7 +9,7 @@ export async function fetchRegister({email,password,repeat_password}:{email:stri
         },
         body:JSON.stringify({email,password,repeat_password})
     })
-    if (res.status!=201) throw new Error("failed") 
+    if (res.status!=201) throw await res.json()
     const data=await res.json()
     return data
 }
