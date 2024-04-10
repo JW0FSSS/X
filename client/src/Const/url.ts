@@ -1,1 +1,1 @@
-export const URL="http://vps-4032930-x.dattaweb.com/api"
+export const URL="https://vps-4032930-x.dattaweb.com/api"
