@@ -9,7 +9,7 @@ export async function fetchLogin({email,password}:{email:string,password:string}
         body:JSON.stringify({email,password})
     })
 
-    if (res.status!=200) return {error:"failed"}
+    if (res.status!=200) throw await res.json()
     
     const data= await res.json()
     return data 

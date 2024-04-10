@@ -8,6 +8,7 @@ import { Terms } from "./terms"
 
 export function RigthZone({setLoading}:{setLoading:any}) {
 
+    const [error,setError]=useState(null)
     const [login,setLogin]=useState<Record<string,string>>({email:"",password:""})
     const [isModalOpen,setModal]=useState<boolean>(false)
     const dispatch=useDispatch()
@@ -19,7 +20,12 @@ export function RigthZone({setLoading}:{setLoading:any}) {
         .then(res=>{
             const {token}=res.data
             dispatch(setToken({token}))
-    })
+        })
+        .catch((e)=>{
+            setError(e.error)
+        }).finally(()=>setTimeout(() => {
+            setError(null)
+        }, 1000))
     }
 
     const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
@@ -63,6 +69,7 @@ export function RigthZone({setLoading}:{setLoading:any}) {
                     <button className='text-secondary border-2 border-white/40 rounded-3xl px-20 py-2' type='submit' form='login'>Iniciar sesion</button>
                     </div>
                 </div>
+                {error?<div className="fixed right-0 bottom-0 z-50  bg-red-900 px-4 py-2 rounded-lg  w-40 transition-all ease-in-out duration-300"><h1>{error}</h1></div>:<div className="fixed right-0 -bottom-10 z-50  bg-red-900 px-4 py-2 rounded-lg  transition-all ease-in-out duration-300 w-40"></div>}
                 {isModalOpen?<Register isModalOpen={isModalOpen} setModal={setModal}/>:""}
             </main>
     )

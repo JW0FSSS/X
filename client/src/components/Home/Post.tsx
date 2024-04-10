@@ -20,6 +20,7 @@ export function Post() {
         const {title,content}=post
         fetchPost({token:user.token,title,content})
         .then(res=>console.log(res))
+        e.target.reset()
     }
 
     return(
