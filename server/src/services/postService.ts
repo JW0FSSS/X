@@ -10,7 +10,7 @@ export async function CreatePost(buffer:any,content:string,id:number){
         image=await UploadImage({buffer})
         if (!image) throw new Error("Error image")
     }
-
+    
     const postcreated=await prisma.post.create({data:{image:!image?buffer:image,content,userId:id,published:true}})
 
     return {data:postcreated,message:"post created"}

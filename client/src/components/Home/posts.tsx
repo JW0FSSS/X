@@ -29,7 +29,7 @@ export function Posts({post,token}:{post:IFeed,token:string,}) {
                     <span className="text-white/40 ">{date.toLocaleString("es-es", { timeZone: 'UTC' })}</span>
                 </div>
                 <h2 className="text-lg my-5">{post.content}</h2>
-                {post.image?<div><img src={post.image} alt="" className="rounded-2xl border-[1px] border-white/20 mb-2" /></div>:null}
+                {post.image?<div><img src={post.image} alt="" className="rounded-2xl border-[1px] border-white/20 mb-2 w-full" /></div>:null}
               </div>
               <div className="flex gap-40">
               <div className="hover:text-blue-500 group flex gap-2 items-center hover:cursor-pointer " onClick={()=>handleNavigate(post.id)}>

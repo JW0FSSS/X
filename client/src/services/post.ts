@@ -11,8 +11,6 @@ export async function fetchPost({token,formData}:{token:string,formData:any}) {
          },
          body:formData
      })
-     console.log(res);
-     
      
      const data= await res.json()
      return data 

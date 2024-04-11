@@ -8,8 +8,6 @@ cloudinary.config({
 });
 
 export async function UploadImage({buffer}:{buffer:any}) {
-
-
     const res=await new Promise((resolve)=>{
         cloudinary.uploader.upload_stream({resource_type:"auto"},(error, result) => {
             return resolve(result)
