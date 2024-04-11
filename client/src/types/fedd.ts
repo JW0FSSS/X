@@ -15,7 +15,7 @@ export interface IFeed {
     id:        number;
     createdAt: Date;
     updatedAt: Date;
-    title:     string;
+    image:     string;
     content:   string;
     published: boolean;
     userId:    number;

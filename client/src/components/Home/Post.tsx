@@ -6,7 +6,8 @@ import { Link } from "react-router-dom"
 
 export function Post() {
     
-    const [post,setPost]=useState({title:"",content:""})
+    const [post,setPost]=useState({content:""})
+    const [file,setFile]=useState(null)
 
     const user=useSelector((state:RootState)=>state.user)
 
@@ -14,11 +15,20 @@ export function Post() {
         const content=e.target.value
         setPost(prev=>({...prev,content}))
     }
+
+    const handleFile=(e:React.ChangeEvent<HTMLInputElement>)=>{
+        setFile(e.target.files[0])
+    }
     
     const handleSubmit=(e: React.FormEvent<HTMLFormElement> )=>{
         e.preventDefault()
-        const {title,content}=post
-        fetchPost({token:user.token,title,content})
+        const formData=new FormData()
+        const {content}=post
+
+        formData.set('file',file)
+        formData.set('content',content)
+        
+        fetchPost({token:user.token,formData})
         .then(res=>console.log(res))
         e.target.reset()
     }
@@ -29,10 +39,10 @@ export function Post() {
                 <Link to={`/user/${user.username}`}>
                     <img src={`${user.image?user.image:"https://www.testhouse.net/wp-content/uploads/2021/11/default-avatar.jpg"}`} alt="" className="rounded-full size-10"/>
                 </Link>
-                <input  onChange={handleChange} placeholder="¿What is happening?!!"  className=" resize-none bg-transparent w-5/6 border-b-[1px] border-white/30 focus:outline-none pb-10"></input>
+                <input onChange={handleChange} placeholder="¿What is happening?!!"  className=" resize-none bg-transparent w-5/6 border-b-[1px] border-white/30 focus:outline-none pb-10"></input>
             </div>
           <div className="flex justify-between  items-center mx-5 mb-2">
-            <h1>Future actions...</h1>
+            <input type="file" onChange={handleFile}/>
             <button type="submit" className="bg-secondary hover:bg-opacity-85 transition-opacity duration-300 rounded-3xl px-4 py-2">POST</button>
           </div>
         </form>

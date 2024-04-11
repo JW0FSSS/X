@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "data":"tsx src/config/inyecData.ts",
+    "data": "tsx src/config/inyecData.ts",
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
     "build": "tsup src --format esm"
@@ -15,12 +15,17 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "5.11.0",
+    "@types/body-parser": "^1.19.5",
+    "@types/multer": "^1.4.11",
     "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "cloudinary": "^2.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "joi": "^17.12.2",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "multer": "1.4.5-lts.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

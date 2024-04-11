@@ -2,12 +2,15 @@ import { Request, Response } from "express"
 import { AllPost, AllPostUser, AllPostbyUser, CreatePost, DeletePost, OnePost, UpdatePost } from "../services/postService.js"
 
 export async function CreatePostController(req:Request,res:Response){
-
-    const {title,content}=req.body
+    
+    const {content}=req.body
     const {id}=req
-
+    const file=req.file
+    const image =file?.buffer?file.buffer:""
+    
     try {
-        const data=await CreatePost(title,content,id)
+        const data=await CreatePost(image,content,id)
+        req.file = undefined;
         res.status(201).json(data)
     } catch (error) {
         res.status(400).json({error:error.message})

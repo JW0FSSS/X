@@ -2,16 +2,17 @@ import { useEffect, useState } from "react"
 import { URL } from "../Const/url"
 import { IFeed } from "../types/fedd"
 
-export async function fetchPost({token,title="content",content}:{token:string,title:string,content:string}) {
+export async function fetchPost({token,formData}:{token:string,formData:any}) {
+
     const res =await fetch(`${URL}/posts`,{
         method:"post", 
          headers:{
-             "Content-type":"application/json",
              "Authorization":`Bearer ${token}`
          },
-         body:JSON.stringify({title,content})
+         body:formData
      })
- 
+     console.log(res);
+     
      
      const data= await res.json()
      return data 

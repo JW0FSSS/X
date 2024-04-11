@@ -1,10 +1,17 @@
 import { PrismaClient } from "@prisma/client";
+import { UploadImage } from "utilities/Cloudinary.js";
 
 const prisma=new PrismaClient()
 
-export async function CreatePost(title:string,content:string,id:number){
+export async function CreatePost(buffer:any,content:string,id:number){
 
-    const postcreated=await prisma.post.create({data:{title,content,userId:id,published:true}})
+    let image
+    if (buffer) {
+        image=await UploadImage({buffer})
+        if (!image) throw new Error("Error image")
+    }
+
+    const postcreated=await prisma.post.create({data:{image:!image?buffer:image,content,userId:id,published:true}})
 
     return {data:postcreated,message:"post created"}
 
@@ -22,7 +29,7 @@ export async function DeletePost(userId:number,id:number){
 }
 export async function AllPost(){
     
-    const allPost= await prisma.post.findMany({select:{title:true,content:true,comments:true,likes:true}})
+    const allPost= await prisma.post.findMany({select:{image:true,content:true,comments:true,likes:true}})
     
     return {data:allPost,message:"Posts founds"}
 }
@@ -76,7 +83,6 @@ export async function UpdatePost(title:string,content:string,published:boolean,u
     const postupdate=await prisma.post.update({
         where:{id},
         data:{
-            title,
             content,
             published
         }})

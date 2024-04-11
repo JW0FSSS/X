@@ -16,7 +16,6 @@ export function Home() {
 
   const [isloading,setLoading]=useState(true)
   const {errorFeed,feed,isloadingFeed}=usefetchFeed({token:user.token})
-
       
   useEffect(()=>{
 
