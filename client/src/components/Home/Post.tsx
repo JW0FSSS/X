@@ -30,11 +30,11 @@ export function Post() {
 
         formData.append('file',file)
         formData.append('content',content)
-        console.log(formData.get("file"));
-        
+    
         fetchPost({token:user.token,formData})
         .then(res=>console.log(res))
         e.target.reset()
+        setImage(null)
     }
 
     const handleClick = () => {
@@ -48,7 +48,9 @@ export function Post() {
                     <img src={`${user.image?user.image:"https://www.testhouse.net/wp-content/uploads/2021/11/default-avatar.jpg"}`} alt="" className="rounded-full size-10"/>
                 </Link>
                 <input onChange={handleChange} placeholder="¿What is happening?!!"  className={`resize-none bg-transparent w-5/6 ${image?"":"border-b-[1px]"} border-white/30 focus:outline-none pb-10`}></input>
-                {image?<img src={URL.createObjectURL(image)} alt="" className="rounded-3xl w-full px-10" />:null}
+                <div className="w-full flex justify-center">
+                    {image?<img src={URL.createObjectURL(image)} alt="" className="rounded-3xl w-11/12" />:null}
+                </div>
             </div>
           <div className="flex justify-between  items-center mx-5 mb-2">
             <div className="">
