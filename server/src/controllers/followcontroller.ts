@@ -32,9 +32,10 @@ export async function UnFollowController(req:Request,res:Response){
 export async function allFollowingsController(req:Request,res:Response){
     
     const {username}=req.params
+    const {id} =req
 
     try {
-        const data=await allFollowings(username)
+        const data=await allFollowings(username,id)
         res.status(200).json(data)
     } catch (error) {
         res.status(404).json({error:"Error followings"})
@@ -44,9 +45,10 @@ export async function allFollowingsController(req:Request,res:Response){
 export async function allFollowersController(req:Request,res:Response){
 
     const {username}=req.params
+    const {id} =req
 
     try {
-        const data=await allFollowers(username)
+        const data=await allFollowers(username,id)
         res.status(200).json(data)
     } catch (error) {
         res.status(404).json({error:"error followers"})

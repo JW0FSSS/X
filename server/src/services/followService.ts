@@ -26,31 +26,36 @@ export async function UnFollow(followerId:number,followingId:number){
     return {data:{UnFollow},message:"UnFollow"}
 }
 
-export async function allFollowings(username:string){
+export async function allFollowings(username:string,id:number){
 
     const followerId=await prisma.user.findFirst({where:{username}})
 
     if (!followerId?.id) throw new Error("user Not found");
 
-    const allFollowings= await prisma.follow.findMany({where:{followerId:followerId.id},include:{following:{select:{id:true,image:true,name:true,username:true}}}})
+    const _allFollowings= await prisma.follow.findMany({where:{followerId:followerId.id},include:{following:{select:{id:true,image:true,name:true,username:true}}}})
+
+    const verifyFollows=_allFollowings.map(async(following)=>await prisma.follow.findFirst({where:{AND:{followerId:id,followingId:following.followingId}}}))
+    
+    const prevalFollowings=await Promise.all(verifyFollows)
+
+    const allFollowings=_allFollowings.map(e=>({...e,isfollowing:prevalFollowings.some(a=>e.followingId==a?.followingId)}))
 
     return {data:allFollowings,message:"Followers founds"}
 }
 
-export async function allFollowers(username:string){
+export async function allFollowers(username:string,id:number){
     
     const followerId=await prisma.user.findFirst({where:{username}})
 
     if (!followerId?.id) throw new Error("user Not found");
 
-    const allFollowers= await prisma.follow.findMany({where:{followingId:followerId.id},include:{follower:{select:{id:true,image:true,name:true,username:true}}}})
+    const _allFollowers= await prisma.follow.findMany({where:{followingId:followerId.id},include:{follower:{select:{id:true,image:true,name:true,username:true}}}})
 
-    const isfollowing=allFollowers.map(async(e)=>await prisma.follow.findFirst({where:{AND:{followerId:followerId.id,followingId:e.followerId}}}))
+    const verifyFollows=_allFollowers.map(async(following)=>await prisma.follow.findFirst({where:{AND:{followerId:id,followingId:following.followerId}}}))
 
-    const data=await Promise.all(isfollowing)
+    const prevalFollowings=await Promise.all(verifyFollows)
 
-    const result=allFollowers.map(e=>({...e,isfollowing:data.some(a=>e.followerId==a?.followingId)}))
+    const result=_allFollowers.map(e=>({...e,isfollowing:prevalFollowings.some(a=>e.followerId==a?.followingId)}))
 
-    
     return {data:result,message:"Followers founds"}
 }

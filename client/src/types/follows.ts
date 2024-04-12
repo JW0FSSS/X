@@ -1,5 +1,6 @@
 export interface IFollowings {
-    following:IFollow
+    following:IFollow,
+    isfollowing: boolean,
 }
 
 export interface IFollowers {

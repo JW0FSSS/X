@@ -38,17 +38,17 @@ export function Followings() {
                     </div>
                     <NavFollow user={profile}/>
                     <div className="border-t-[1px] px-3 py-5">
-                        {error?<h1 className="text-center">Ha ocurrido un error</h1>:followings.map(({following})=>{
+                        {error?<h1 className="text-center">Ha ocurrido un error</h1>:followings.map((e)=>{
                             return(
-                                <article key={following.id} className="flex justify-between mb-5">
+                                <article key={e.following.id} className="flex justify-between mb-5">
                                     <div className="flex gap-5">
-                                        <img src={following.image} alt=""  className="rounded-3xl size-10 "/>
+                                        <img src={e.following.image} alt=""  className="rounded-3xl size-10 "/>
                                         <div className="">
-                                            <h1>{following.name}</h1>
-                                            <h1 className="text-white/40">@{following.username}</h1>
+                                            <h1>{e.following.name}</h1>
+                                            <h1 className="text-white/40">@{e.following.username}</h1>
                                         </div>
                                     </div>
-                                    <FollowerCard token={user.token} id={following.id} isfollowing={true}/>
+                                    <FollowerCard token={user.token} id={e.following.id} isfollowing={e.isfollowing}/>
                                 </article>
                             )
                         })}
