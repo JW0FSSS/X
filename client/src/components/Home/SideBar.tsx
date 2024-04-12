@@ -52,6 +52,11 @@ export function SideBar() {
     const handleClick = () => {
         input.current.click();
       };
+      const handelReset=()=>{
+        setImage("")
+        setFile(null)
+        input.current.value=""
+      }
 
 
     return(
@@ -71,9 +76,10 @@ export function SideBar() {
                     <div className="relative p-4 w-full top-20 left-1/3 ">
                      <form onSubmit={handleSubmit} className="min-w-[500px] max-w-[600px] rounded-xl bg-black text-white fixed z-50 top-20 left-1/3 px-5 pt-14 pb-5" >
                         <button type="button" className="absolute top-3 left-5 px-2 hover:bg-opacity-50 hover:bg-white/20 rounded-full" onClick={()=>setModal(!ismodalOpen)}>X</button>
-                        <div className="flex gap-4 flex-wrap border-b-[1px] text-xl border-white/30 pb-10">
+                        <div className="flex gap-4 flex-wrap border-b-[1px] text-xl border-white/30 pb-10 relative">
                             <img src={`${user.image?user.image:"https://www.testhouse.net/wp-content/uploads/2021/11/default-avatar.jpg"}`} alt="" className="rounded-full size-10"/>
                             <input onChange={handleChange} placeholder="¿What is happening?!!"  className=" resize-none bg-transparent w-5/6 focus:outline-none mb-5 "></input>
+                            {image?<button className="absolute top-10 right-6 hover:bg-white/20 px-2 rounded-full" onClick={handelReset}>X</button>:null}
                             {image?<img src={URL.createObjectURL(image)} alt="" className="rounded-3xl w-10/12 ml-10 mb-5"/>:null}
                         </div>
                         <div className="flex justify-between mt-4">

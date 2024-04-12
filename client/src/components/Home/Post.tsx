@@ -34,12 +34,19 @@ export function Post() {
         fetchPost({token:user.token,formData})
         .then(res=>console.log(res))
         e.target.reset()
-        setImage(null)
+        setImage("")
     }
 
     const handleClick = () => {
         input.current.click();
       };
+
+      const handelReset=()=>{
+        setImage("")
+        setFile(null)
+        input.current.value=""
+      }
+
 
     return(
         <form className="w-full -pr-5 border-b-[1px] p-5 border-white/30" onSubmit={handleSubmit}>
@@ -48,7 +55,8 @@ export function Post() {
                     <img src={`${user.image?user.image:"https://www.testhouse.net/wp-content/uploads/2021/11/default-avatar.jpg"}`} alt="" className="rounded-full size-10"/>
                 </Link>
                 <input onChange={handleChange} placeholder="¿What is happening?!!"  className={`resize-none bg-transparent w-5/6 ${image?"":"border-b-[1px]"} border-white/30 focus:outline-none pb-10`}></input>
-                <div className="w-full flex justify-center">
+                <div className="w-full flex justify-center relative">
+                    {image?<button className="absolute top-0 right-0 hover:bg-white/20 px-2 rounded-full" onClick={handelReset}>X</button>:null}
                     {image?<img src={URL.createObjectURL(image)} alt="" className="rounded-3xl w-11/12" />:null}
                 </div>
             </div>
