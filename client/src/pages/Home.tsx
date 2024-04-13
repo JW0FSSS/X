@@ -44,7 +44,7 @@ export function Home() {
         <Post/>
         {isloadingFeed&&!errorFeed?
         <h1 className="text-center py-10">Loading...</h1>:""}
-        {errorFeed?<h1 className="text-center py-10">Ha ocurrido un error...</h1>
+        {!isloading&&errorFeed?<h1 className="text-center py-10">Ha ocurrido un error...</h1>
         :feed.filter(e=>e!==null).map((post)=><Posts post={post} token={user.token} />)}
       </main>
 

@@ -12,7 +12,7 @@ export function Layaout({children}) {
     if (isloadingUsers) return  <h1 className="text-center py-10">Loading...</h1>
 
     return(
-        <section className="bg-black text-white h-full w-full">
+        <section className="bg-black text-[#e2e4e5] h-full w-full">
             <SideBar/>
             {children}
             <section className="fixed py-5 w-[400px] top-4 right-52 flex flex-col justify-center  bg-white/10 rounded-xl">

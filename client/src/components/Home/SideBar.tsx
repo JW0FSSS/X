@@ -92,7 +92,7 @@ export function SideBar() {
                                 <label className="cursor-pointer" onClick={handleClick}><Picture/></label>
                                 <input type="file" id="image" ref={input} onChange={handleFile} accept="image/*" style={{display: 'none'}}/>
                             </div>
-                            <button type="submit" disabled={isloadingPost} className={`${isloadingPost?"bg-secondary/50":"bg-secondary"} hover:bg-opacity-85 transition-opacity duration-300 rounded-3xl px-4 py-2`}>{isloadingPost?"Posting":"Post"}</button>
+                            <button type="submit" disabled={(!post.content&&!file)||isloadingPost} className={`${(!post.content&&!file)||isloadingPost?"bg-secondary/50":"bg-secondary"} hover:bg-opacity-85 transition-opacity duration-300 rounded-3xl px-4 py-2`}>{isloadingPost?"Posting":"Post"}</button>
                         </div>
                     </form>
                     </div>
