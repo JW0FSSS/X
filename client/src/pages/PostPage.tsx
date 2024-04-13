@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import {  useParams } from "react-router-dom"
 import { useEffect, useState } from "react";
 import { fetchOnePost } from "../services/post";
 import { useSelector } from "react-redux";
@@ -17,6 +17,7 @@ export function PostPage() {
     const [posts,setPost]=useState<IFeed[]>([])
     const [comments,setComments]=useState<IComments[]>([])
     const [comment,setComment]=useState({content:""})
+    const [trigger,setTrigger]=useState("")
     
     const handleChange=(e: React.ChangeEvent<HTMLInputElement>)=>{
         const content=e.target.value
@@ -26,11 +27,15 @@ export function PostPage() {
     
     const handleSubmit=(e: React.FormEvent<HTMLFormElement> )=>{
         e.preventDefault()
+        const azar=Math.random()*50
         const {content}=comment
         const {id}=param
         if (id==undefined) return
         fetchComment({token:user.token,content,postId:id})
         e.target.reset()
+        setTimeout(() => {
+            setTrigger(comment.content+azar)
+        }, 500);
     }   
     
     
@@ -42,13 +47,15 @@ export function PostPage() {
                 window.location.href='/'
             })
 
+        },[])
+        useEffect(()=>{
             user.token?fetchComments({token:user.token,postId:param.id||"1"})
             .then(res=>setComments(res.data))
             .catch(e=>{
                 localStorage.clear()
                 window.location.href='/'
             }):null
-        },[])
+        },[trigger])
         
     return(
         <Layaout>
