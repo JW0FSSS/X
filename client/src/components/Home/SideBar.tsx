@@ -44,9 +44,9 @@ export function SideBar() {
         
         fetchPost({token:user.token,formData})
         .then(res=>console.log(res))
-        e.target.reset()
-        setImage(null)
         setTimeout(() => {
+            setImage(null)
+            e.target.reset()
             setLoading(prev=>false)
         }, 500);
     }
