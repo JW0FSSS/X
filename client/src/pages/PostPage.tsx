@@ -37,6 +37,7 @@ export function PostPage() {
         e.target.reset()
         setTimeout(() => {
             setLoading(prev=>false)
+            setComment({content:""})
             setTrigger(comment.content+azar)
         }, 500);
     }   
@@ -71,7 +72,7 @@ export function PostPage() {
                     <input onChange={handleChange} placeholder="¿What is happening?!!" maxLength={120} className=" resize-none bg-transparent w-5/6  border-white/30 focus:outline-none ml-20 my-10 pb-10 ">
                     </input>
                     <div className="flex justify-between  items-center mx-5 mb-2">
-                    <button type="submit" disabled={isloadingComment} className={`${isloadingComment?"bg-secondary/50":"bg-secondary"} hover:bg-opacity-85 transition-opacity duration-300 rounded-3xl px-4 py-2 absolute bottom-3 right-3`}>{isloadingComment?"Commenting":"Comment"}</button>
+                    <button type="submit" disabled={!comment.content||isloadingComment} className={`${!comment.content||isloadingComment?"bg-secondary/50":"bg-secondary"} hover:bg-opacity-85 transition-opacity duration-300 rounded-3xl px-4 py-2 absolute bottom-3 right-3`}>{isloadingComment?"Commenting":"Comment"}</button>
                     </div>
                 </form>
                 </div>
