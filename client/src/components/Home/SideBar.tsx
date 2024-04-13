@@ -17,7 +17,8 @@ export function SideBar() {
     const user=useSelector((state:RootState)=>state.user)
     const [post,setPost]=useState({content:""})
     const [file,setFile]=useState(null)
-    const [image,setImage]=useState("")
+    const [image,setImage]=useState(null)
+    const [isloadingPost,setLoading]=useState(false)
     const input=useRef(null)
     const dispatch=useDispatch()
 
@@ -34,6 +35,7 @@ export function SideBar() {
 
     const handleSubmit=(e: React.FormEvent<HTMLFormElement> )=>{
         e.preventDefault()
+        setLoading(prev=>true)
         const formData=new FormData()
         const {content}=post
 
@@ -44,6 +46,9 @@ export function SideBar() {
         .then(res=>console.log(res))
         e.target.reset()
         setImage(null)
+        setTimeout(() => {
+            setLoading(prev=>false)
+        }, 500);
     }
 
     const handleLogout=()=>{
@@ -87,7 +92,7 @@ export function SideBar() {
                                 <label className="cursor-pointer" onClick={handleClick}><Picture/></label>
                                 <input type="file" id="image" ref={input} onChange={handleFile} accept="image/*" style={{display: 'none'}}/>
                             </div>
-                        <button type="submit" className="hover:bg-opacity-70 px-4 py-1 bg-secondary rounded-full" >Post</button>
+                            <button type="submit" disabled={isloadingPost} className={`${isloadingPost?"bg-secondary/50":"bg-secondary"} hover:bg-opacity-85 transition-opacity duration-300 rounded-3xl px-4 py-2`}>{isloadingPost?"Posting":"Post"}</button>
                         </div>
                     </form>
                     </div>

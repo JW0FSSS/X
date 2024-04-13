@@ -10,7 +10,8 @@ export function Post() {
     const [post,setPost]=useState({content:""})
     const [file,setFile]=useState(null)
     const input=useRef(null)
-    const [image,setImage]=useState("")
+    const [image,setImage]=useState(null)
+    const [isloadingPost,setLoading]=useState(false)
     const user=useSelector((state:RootState)=>state.user)
 
     const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
@@ -25,6 +26,7 @@ export function Post() {
     
     const handleSubmit=(e: React.FormEvent<HTMLFormElement> )=>{
         e.preventDefault()
+        setLoading(prev=>true)
         const formData=new FormData()
         const {content}=post
 
@@ -34,7 +36,10 @@ export function Post() {
         fetchPost({token:user.token,formData})
         .then(res=>console.log(res))
         e.target.reset()
-        setImage("")
+        setImage(null)
+        setTimeout(() => {
+            setLoading(prev=>false)
+        }, 500);
     }
 
     const handleClick = () => {
@@ -65,7 +70,7 @@ export function Post() {
                 <label className="cursor-pointer" onClick={handleClick}><Picture/></label>
                 <input type="file"onChange={handleFile} ref={input} style={{display: 'none'}}  />
             </div>
-            <button type="submit" className="bg-secondary hover:bg-opacity-85 transition-opacity duration-300 rounded-3xl px-4 py-2">POST</button>
+            <button type="submit" disabled={isloadingPost} className={`${isloadingPost?"bg-secondary/50":"bg-secondary"} hover:bg-opacity-85 transition-opacity duration-300 rounded-3xl px-4 py-2`}>{isloadingPost?"Posting":"Post"}</button>
           </div>
         </form>
     )
