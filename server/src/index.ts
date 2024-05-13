@@ -33,7 +33,7 @@ app.use((req:Request,res:Response,next:NextFunction)=>{
     next(error)
 })
 
-app.use((err:ErrorNotFound,req:Request,res:Response,next:NextFunction)=>{    
+app.use((err:Error,req:Request,res:Response,next:NextFunction)=>{    
     res.send({error:err.message}).status(err.status)
 })
 
